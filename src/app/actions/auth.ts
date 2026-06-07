@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function signIn(
@@ -21,12 +22,19 @@ export async function signUp(
   formData: FormData
 ): Promise<string | null> {
   const supabase = await createClient()
+  const h = await headers()
+  const host = h.get('x-forwarded-host') ?? h.get('host')
+  const proto = h.get('x-forwarded-proto') ?? 'http'
+  const origin = `${proto}://${host}`
+
   const { data, error } = await supabase.auth.signUp({
     email: formData.get('email') as string,
     password: formData.get('password') as string,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback`,
+    },
   })
   if (error) return error.message
-  // Email confirmation disabled in Supabase → session exists immediately
   if (data.session) redirect('/exams')
   return 'CHECK_EMAIL'
 }
