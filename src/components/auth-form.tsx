@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { signIn, signUp } from '@/app/actions/auth'
 
 function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
@@ -19,11 +19,36 @@ export function AuthForm() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [signinError, signinAction, signinPending] = useActionState(signIn, null)
   const [signupResult, signupAction, signupPending] = useActionState(signUp, null)
+  const [hideConfirmation, setHideConfirmation] = useState(false)
+  const showConfirmation = signupResult === 'CHECK_EMAIL' && !hideConfirmation
 
-  if (signupResult === 'CHECK_EMAIL') {
+  useEffect(() => {
+    if (!showConfirmation) return
+    window.history.pushState({ gatherdoConfirmation: true }, '')
+    const onPop = () => {
+      setMode('signin')
+      setHideConfirmation(true)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [showConfirmation])
+
+  if (showConfirmation) {
     return (
-      <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-        Check your email for a confirmation link, then come back to sign in.
+      <div className="space-y-4">
+        <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+          Check your email for a confirmation link, then come back to sign in.
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setMode('signin')
+            setHideConfirmation(true)
+          }}
+          className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          Back to Sign In
+        </button>
       </div>
     )
   }
