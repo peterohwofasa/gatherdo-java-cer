@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { Header } from '@/components/header'
 import Link from 'next/link'
 
@@ -14,12 +14,24 @@ export default async function ResultsPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { data: attempt } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('is_instructor')
+    .eq('id', user.id)
+    .single()
+
+  const isInstructor = !!profile?.is_instructor
+  const client = isInstructor ? await createServiceClient() : supabase
+
+  let query = client
     .from('attempts')
     .select('*, exams(name, code, pass_percent, questions_per_sitting, duration_minutes)')
     .eq('id', attemptId)
-    .eq('student_id', user.id)
-    .single()
+  if (!isInstructor) {
+    query = query.eq('student_id', user.id)
+  }
+
+  const { data: attempt } = await query.single()
 
   if (!attempt) redirect('/exams')
   if (attempt.status !== 'completed') redirect(`/exam/${attemptId}`)
