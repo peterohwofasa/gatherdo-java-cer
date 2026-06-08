@@ -52,21 +52,27 @@ export default async function ReviewPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  // Verify ownership
-  const { data: attempt } = await supabase
+  const svc = await createServiceClient()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('is_instructor')
+    .eq('id', user.id)
+    .single()
+  const isInstructor = !!profile?.is_instructor
+  const client = isInstructor ? svc : supabase
+
+  let attemptQuery = client
     .from('attempts')
     .select('student_id, status, exam_id, question_order, exams(name)')
     .eq('id', attemptId)
-    .eq('student_id', user.id)
-    .single()
+  if (!isInstructor) attemptQuery = attemptQuery.eq('student_id', user.id)
+  const { data: attempt } = await attemptQuery.single()
 
   if (!attempt) redirect('/exams')
   if (attempt.status !== 'completed') redirect(`/exam/${attemptId}`)
 
-  // Use service client to get correct_answer
-  const svc = await createServiceClient()
-
-  const { data: answers } = await supabase
+  const { data: answers } = await client
     .from('attempt_answers')
     .select('question_id, selected, is_correct')
     .eq('attempt_id', attemptId)

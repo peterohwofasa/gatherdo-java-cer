@@ -90,12 +90,14 @@ export default async function InstructorPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <Link
-                        href={`/results/${a.id}`}
-                        className="text-teal-700 hover:underline text-sm"
-                      >
-                        View
-                      </Link>
+                      <div className="flex items-center justify-end gap-3">
+                        <Link href={`/results/${a.id}`} className="text-teal-700 hover:underline text-sm">
+                          View
+                        </Link>
+                        <Link href={`/review/${a.id}`} className="text-teal-700 hover:underline text-sm">
+                          Review
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 )
