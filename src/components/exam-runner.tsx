@@ -60,6 +60,8 @@ export function ExamRunner({ state }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [seconds, setSeconds] = useState(Math.max(0, initialSeconds))
   const [showSubmitWarning, setShowSubmitWarning] = useState(false)
+  const [flagged, setFlagged] = useState<Set<string>>(new Set())
+  const [showPalette, setShowPalette] = useState(false)
   const [isPending, startTransition] = useTransition()
   const autoSubmittedRef = useRef(false)
 
@@ -133,6 +135,16 @@ export function ExamRunner({ state }: Props) {
   const isMulti = multiCount > 1
   const answeredCount = Object.values(answers).filter((v) => v !== '').length
   const unansweredCount = questions.length - answeredCount
+  const flaggedCount = flagged.size
+
+  function toggleFlag(questionId: string) {
+    setFlagged((prev) => {
+      const next = new Set(prev)
+      if (next.has(questionId)) next.delete(questionId)
+      else next.add(questionId)
+      return next
+    })
+  }
 
   const timerDanger = seconds <= 300
 
@@ -163,7 +175,14 @@ export function ExamRunner({ state }: Props) {
           </Link>
           <span className="font-semibold text-gray-800 text-sm truncate">{state.exam.name}</span>
         </div>
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
+          {/* Mobile palette toggle */}
+          <button
+            onClick={() => setShowPalette(true)}
+            className="md:hidden rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            Questions {answeredCount}/{questions.length}
+          </button>
           <span
             className={`font-mono text-sm font-bold ${
               timerDanger ? 'text-red-600 animate-pulse' : 'text-gray-700'
@@ -181,20 +200,26 @@ export function ExamRunner({ state }: Props) {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Question list sidebar */}
-        <aside className="hidden md:block w-48 bg-white border-r border-gray-200 p-3 overflow-y-auto shrink-0">
-          <p className="text-xs text-gray-400 font-medium uppercase mb-2">Questions</p>
+        {/* Question palette sidebar (desktop) */}
+        <aside className="hidden md:flex w-48 bg-white border-r border-gray-200 p-3 overflow-y-auto shrink-0 flex-col gap-3">
+          <p className="text-xs text-gray-400 font-medium uppercase">
+            Questions · {answeredCount}/{questions.length}
+          </p>
           <div className="grid grid-cols-5 gap-1">
             {questions.map((q, idx) => {
               const answered = !!answers[q.id]
               const isCurrent = idx === currentIndex
+              const isFlagged = flagged.has(q.id)
               return (
                 <button
                   key={q.id}
                   onClick={() => setCurrentIndex(idx)}
+                  title={isFlagged ? 'Flagged for review' : undefined}
                   className={`h-7 w-7 rounded text-xs font-medium transition-colors ${
                     isCurrent
-                      ? 'bg-teal-600 text-white'
+                      ? 'bg-teal-600 text-white ring-2 ring-teal-300'
+                      : isFlagged
+                      ? 'bg-orange-400 text-white hover:bg-orange-500'
                       : answered
                       ? 'bg-green-100 text-green-700 hover:bg-green-200'
                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -205,6 +230,12 @@ export function ExamRunner({ state }: Props) {
               )
             })}
           </div>
+          {/* Legend */}
+          <div className="mt-auto space-y-1 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-gray-200 shrink-0" />Unanswered</div>
+            <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-green-100 shrink-0" />Answered</div>
+            <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-orange-400 shrink-0" />Flagged</div>
+          </div>
         </aside>
 
         {/* Main content */}
@@ -214,11 +245,24 @@ export function ExamRunner({ state }: Props) {
               <span className="text-sm text-gray-400">
                 Question {currentIndex + 1} of {questions.length}
               </span>
-              {currentQuestion.topic && (
-                <span className="text-xs text-gray-400 bg-gray-100 rounded px-2 py-0.5">
-                  {currentQuestion.topic}
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => toggleFlag(currentQuestion.id)}
+                  className={`text-xs px-2.5 py-1 rounded transition-colors ${
+                    flagged.has(currentQuestion.id)
+                      ? 'bg-orange-100 text-orange-600 font-semibold'
+                      : 'bg-gray-100 text-gray-500 hover:bg-orange-50 hover:text-orange-500'
+                  }`}
+                >
+                  {flagged.has(currentQuestion.id) ? '⚑ Flagged' : '⚑ Flag for Review'}
+                </button>
+                {currentQuestion.topic && (
+                  <span className="text-xs text-gray-400 bg-gray-100 rounded px-2 py-0.5">
+                    {currentQuestion.topic}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
@@ -295,15 +339,74 @@ export function ExamRunner({ state }: Props) {
         </main>
       </div>
 
+      {/* Mobile question palette drawer */}
+      {showPalette && (
+        <div className="md:hidden fixed inset-0 z-40 flex items-end">
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setShowPalette(false)}
+          />
+          <div className="relative bg-white rounded-t-2xl w-full p-5 z-10 max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-semibold text-gray-800">
+                All Questions · {answeredCount}/{questions.length} answered
+              </span>
+              <button
+                onClick={() => setShowPalette(false)}
+                className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="grid grid-cols-8 gap-1.5">
+              {questions.map((q, idx) => {
+                const answered = !!answers[q.id]
+                const isCurrent = idx === currentIndex
+                const isFlagged = flagged.has(q.id)
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => { setCurrentIndex(idx); setShowPalette(false) }}
+                    className={`h-9 rounded text-xs font-medium transition-colors ${
+                      isCurrent
+                        ? 'bg-teal-600 text-white ring-2 ring-teal-300'
+                        : isFlagged
+                        ? 'bg-orange-400 text-white'
+                        : answered
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-500'
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="mt-4 flex gap-4 text-xs text-gray-400">
+              <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-gray-200" />Unanswered</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-green-100" />Answered</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-orange-400" />Flagged</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Submit confirmation modal */}
       {showSubmitWarning && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-2">Submit exam?</h2>
-            {unansweredCount > 0 ? (
+            {unansweredCount > 0 || flaggedCount > 0 ? (
               <p className="text-sm text-amber-600 mb-4">
-                You have <strong>{unansweredCount}</strong> unanswered question
-                {unansweredCount !== 1 ? 's' : ''}. These will be marked incorrect.
+                You have{' '}
+                {[
+                  unansweredCount > 0 && <span key="u"><strong>{unansweredCount}</strong> unanswered</span>,
+                  flaggedCount > 0 && <span key="f"><strong>{flaggedCount}</strong> flagged for review</span>,
+                ].filter(Boolean).reduce<React.ReactNode[]>((acc, el, i) => i === 0 ? [el] : [...acc, ' and ', el], [])}
+                {'. '}
+                {unansweredCount > 0 && 'Unanswered questions will be marked incorrect. '}
+                Are you sure you want to submit?
               </p>
             ) : (
               <p className="text-sm text-gray-600 mb-4">
