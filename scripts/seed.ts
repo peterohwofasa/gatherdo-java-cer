@@ -90,9 +90,30 @@ async function seedExam(examId: string, questions: RawQuestion[]) {
   }
 }
 
-async function main() {
-  console.log('Seeding SE17 exam...')
+function loadBank(filename: string, label: string): RawBank {
+  const candidates = [
+    resolve(process.cwd(), filename),
+    join(process.env.USERPROFILE ?? process.env.HOME ?? '', 'Downloads', 'GD', filename),
+    join(process.env.USERPROFILE ?? process.env.HOME ?? '', 'Downloads', filename),
+  ]
 
+  for (const p of candidates) {
+    try {
+      const bank = JSON.parse(readFileSync(p, 'utf-8')) as RawBank
+      console.log(`Loaded ${label} questions from: ${p}`)
+      return bank
+    } catch { /* try next */ }
+  }
+
+  console.error(`Could not find ${filename}. Checked:`)
+  candidates.forEach((p) => console.error('  ' + p))
+  console.error('Place the file in the project root or Downloads/GD/ and retry.')
+  process.exit(1)
+}
+
+async function main() {
+  // ── SE 17 ────────────────────────────────────────────────────────────────
+  console.log('Seeding SE17 exam...')
   const se17Id = await upsertExam({
     code: '1Z0-829',
     name: 'Java SE 17 Developer (1Z0-829)',
@@ -101,31 +122,25 @@ async function main() {
     pass_percent: 68,
   })
   console.log(`SE17 exam id: ${se17Id}`)
+  const se17Bank = loadBank('java_se17_1z0-829_questions.json', 'SE17')
+  console.log(`Seeding ${se17Bank.questions.length} questions...`)
+  await seedExam(se17Id, se17Bank.questions)
 
-  const candidates = [
-    resolve(process.cwd(), 'java_se17_1z0-829_questions.json'),
-    join(process.env.USERPROFILE ?? process.env.HOME ?? '', 'Downloads', 'GD', 'java_se17_1z0-829_questions.json'),
-    join(process.env.USERPROFILE ?? process.env.HOME ?? '', 'Downloads', 'java_se17_1z0-829_questions.json'),
-  ]
-
-  let bank: RawBank | undefined
-  for (const p of candidates) {
-    try {
-      bank = JSON.parse(readFileSync(p, 'utf-8'))
-      console.log(`Loaded questions from: ${p}`)
-      break
-    } catch { /* try next */ }
-  }
-
-  if (!bank) {
-    console.error('Could not find java_se17_1z0-829_questions.json. Checked:')
-    candidates.forEach((p) => console.error('  ' + p))
-    console.error('Place the file in the project root or Downloads/GD/ and retry.')
-    process.exit(1)
-  }
-
-  console.log(`Seeding ${bank.questions.length} questions...`)
-  await seedExam(se17Id, bank.questions)
+  // ── SE 8 ─────────────────────────────────────────────────────────────────
+  // Duration (150 min) and pass mark (65%) are Oracle-published values for
+  // 1Z0-808 — stored as DB config so they can be adjusted without a redeploy.
+  console.log('\nSeeding SE8 exam...')
+  const se8Id = await upsertExam({
+    code: '1Z0-808',
+    name: 'Java SE 8 Programmer I (1Z0-808)',
+    questions_per_sitting: 70,
+    duration_minutes: 150,
+    pass_percent: 65,
+  })
+  console.log(`SE8 exam id: ${se8Id}`)
+  const se8Bank = loadBank('java_se8_exam_questions_clean.json', 'SE8')
+  console.log(`Seeding ${se8Bank.questions.length} questions (${70} per sitting)...`)
+  await seedExam(se8Id, se8Bank.questions)
 
   console.log('\nDone.')
 }
