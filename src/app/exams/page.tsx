@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { Header } from '@/components/header'
 import { SignOutButton } from '@/components/sign-out-button'
 import { startAttempt } from '@/app/actions/exam'
 import type { Exam } from '@/lib/types'
@@ -23,13 +24,10 @@ export default async function ExamsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white px-6 py-3 flex items-center justify-between">
-        <span className="font-semibold text-gray-900">GatherDO</span>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">{user?.email}</span>
-          <SignOutButton />
-        </div>
-      </header>
+      <Header>
+        <span className="text-sm text-gray-500 truncate">{user?.email}</span>
+        <SignOutButton />
+      </Header>
 
       <main className="max-w-2xl mx-auto p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Choose an Exam</h1>
@@ -62,7 +60,7 @@ export default async function ExamsPage() {
                   <form action={startAttempt.bind(null, exam.id)}>
                     <button
                       type="submit"
-                      className="whitespace-nowrap rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                      className="whitespace-nowrap rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
                     >
                       {resumeId ? 'Resume Exam' : 'Start Exam'}
                     </button>
@@ -123,7 +121,7 @@ async function PastAttempts({ userId }: { userId: string }) {
                 </span>
                 <a
                   href={`/results/${a.id}`}
-                  className="text-blue-600 hover:underline text-xs"
+                  className="text-teal-700 hover:underline text-xs"
                 >
                   View
                 </a>

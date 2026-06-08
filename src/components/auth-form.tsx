@@ -8,7 +8,7 @@ function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+      className="w-full rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
     >
       {pending ? 'Please wait…' : label}
     </button>
@@ -66,7 +66,7 @@ export function AuthForm() {
             type="email"
             autoComplete="email"
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
           />
         </div>
         <div>
@@ -79,7 +79,7 @@ export function AuthForm() {
             type="password"
             autoComplete="current-password"
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
           />
         </div>
         {signinError && (
@@ -91,7 +91,7 @@ export function AuthForm() {
           <button
             type="button"
             onClick={() => setMode('signup')}
-            className="text-blue-600 hover:underline font-medium"
+            className="text-teal-600 hover:underline font-medium"
           >
             Create one
           </button>
@@ -112,7 +112,7 @@ export function AuthForm() {
           type="email"
           autoComplete="email"
           required
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
         />
       </div>
       <div>
@@ -126,7 +126,7 @@ export function AuthForm() {
           autoComplete="new-password"
           required
           minLength={6}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
         />
       </div>
       {signupResult && signupResult !== 'CHECK_EMAIL' && (
@@ -138,7 +138,7 @@ export function AuthForm() {
         <button
           type="button"
           onClick={() => setMode('signin')}
-          className="text-blue-600 hover:underline font-medium"
+          className="text-teal-600 hover:underline font-medium"
         >
           Sign in
         </button>

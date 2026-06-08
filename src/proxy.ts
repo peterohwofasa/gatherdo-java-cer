@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/auth/callback']
+const PUBLIC_PATHS = ['/', '/auth', '/auth/callback']
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -35,11 +35,11 @@ export async function proxy(request: NextRequest) {
 
   if (!user && !PUBLIC_PATHS.includes(pathname)) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/auth'
     return NextResponse.redirect(url)
   }
 
-  if (user && pathname === '/') {
+  if (user && (pathname === '/' || pathname === '/auth')) {
     const url = request.nextUrl.clone()
     url.pathname = '/exams'
     return NextResponse.redirect(url)

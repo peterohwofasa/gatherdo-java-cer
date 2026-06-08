@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { Header } from '@/components/header'
 import Link from 'next/link'
 
 export default async function ResultsPage({
@@ -43,12 +44,11 @@ export default async function ResultsPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white px-6 py-3 flex items-center justify-between">
-        <span className="font-semibold text-gray-900">GatherDO</span>
-        <Link href="/exams" className="text-sm text-blue-600 hover:underline">
+      <Header>
+        <Link href="/exams" className="text-sm text-teal-700 hover:underline">
           Back to exams
         </Link>
-      </header>
+      </Header>
 
       <main className="max-w-lg mx-auto p-8">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -96,7 +96,7 @@ export default async function ResultsPage({
           <div className="px-6 pb-6 flex flex-col gap-3">
             <Link
               href={`/review/${attemptId}`}
-              className="block text-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+              className="block text-center rounded-md bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
             >
               Review wrong answers
             </Link>

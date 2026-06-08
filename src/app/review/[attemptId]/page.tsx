@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { Header } from '@/components/header'
 import Link from 'next/link'
 
 function isCodeLine(line: string): boolean {
@@ -77,7 +78,7 @@ export default async function ReviewPage({
   if (!wrongAnswerIds.length) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header examName={(attempt.exams as unknown as { name: string } | null)?.name} attemptId={attemptId} />
+        <ReviewHeader examName={(attempt.exams as unknown as { name: string } | null)?.name} attemptId={attemptId} />
         <main className="max-w-2xl mx-auto p-8 text-center">
           <div className="bg-white rounded-xl border border-gray-200 p-8">
             <div className="text-4xl mb-3">🎯</div>
@@ -85,7 +86,7 @@ export default async function ReviewPage({
             <p className="text-gray-500 text-sm">You got every question right.</p>
             <Link
               href={`/results/${attemptId}`}
-              className="mt-4 inline-block text-blue-600 hover:underline text-sm"
+              className="mt-4 inline-block text-teal-700 hover:underline text-sm"
             >
               Back to results
             </Link>
@@ -123,7 +124,7 @@ export default async function ReviewPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header examName={(attempt.exams as unknown as { name: string } | null)?.name} attemptId={attemptId} />
+      <ReviewHeader examName={(attempt.exams as unknown as { name: string } | null)?.name} attemptId={attemptId} />
 
       <main className="max-w-2xl mx-auto p-4 md:p-8 space-y-6">
         <p className="text-sm text-gray-500">
@@ -208,7 +209,7 @@ export default async function ReviewPage({
           </Link>
           <Link
             href="/exams"
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            className="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
           >
             Take another exam
           </Link>
@@ -218,18 +219,15 @@ export default async function ReviewPage({
   )
 }
 
-function Header({ examName, attemptId }: { examName?: string; attemptId: string }) {
+function ReviewHeader({ examName, attemptId }: { examName?: string; attemptId: string }) {
   return (
-    <header className="border-b border-gray-200 bg-white px-6 py-3 flex items-center justify-between">
-      <div>
-        <span className="font-semibold text-gray-900">GatherDO</span>
-        {examName && (
-          <span className="ml-2 text-sm text-gray-400">— {examName}</span>
-        )}
-      </div>
-      <Link href={`/results/${attemptId}`} className="text-sm text-blue-600 hover:underline">
+    <Header>
+      {examName && (
+        <span className="text-sm text-gray-400 truncate">— {examName}</span>
+      )}
+      <Link href={`/results/${attemptId}`} className="text-sm text-teal-700 hover:underline whitespace-nowrap">
         Back to results
       </Link>
-    </header>
+    </Header>
   )
 }

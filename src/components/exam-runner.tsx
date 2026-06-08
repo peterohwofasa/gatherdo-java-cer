@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useTransition, useRef } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { saveAnswer, submitAttempt } from '@/app/actions/exam'
 import type { ExamState, QuestionForRunner } from '@/lib/types'
 
@@ -147,9 +149,21 @@ export function ExamRunner({ state }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between sticky top-0 z-10">
-        <span className="font-semibold text-gray-800 text-sm">{state.exam.name}</span>
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between gap-4 sticky top-0 z-10">
+        <div className="flex items-center gap-3 min-w-0">
+          <Link href="/" aria-label="GatherDO home" className="flex items-center shrink-0">
+            <Image
+              src="/GatherDO_Technologies_Logo.png"
+              alt="GatherDO Technologies"
+              width={1148}
+              height={258}
+              priority
+              className="h-7 w-auto"
+            />
+          </Link>
+          <span className="font-semibold text-gray-800 text-sm truncate">{state.exam.name}</span>
+        </div>
+        <div className="flex items-center gap-4 shrink-0">
           <span
             className={`font-mono text-sm font-bold ${
               timerDanger ? 'text-red-600 animate-pulse' : 'text-gray-700'
@@ -159,7 +173,7 @@ export function ExamRunner({ state }: Props) {
           </span>
           <button
             onClick={() => setShowSubmitWarning(true)}
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            className="rounded-md bg-teal-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
           >
             Finish Exam
           </button>
@@ -180,7 +194,7 @@ export function ExamRunner({ state }: Props) {
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-7 w-7 rounded text-xs font-medium transition-colors ${
                     isCurrent
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-teal-600 text-white'
                       : answered
                       ? 'bg-green-100 text-green-700 hover:bg-green-200'
                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -209,7 +223,7 @@ export function ExamRunner({ state }: Props) {
 
             <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
               {isMulti && (
-                <p className="text-xs font-medium text-blue-600 bg-blue-50 rounded px-2 py-1 mb-3 inline-block">
+                <p className="text-xs font-medium text-teal-600 bg-teal-50 rounded px-2 py-1 mb-3 inline-block">
                   Choose {multiCount} answers
                 </p>
               )}
@@ -231,7 +245,7 @@ export function ExamRunner({ state }: Props) {
                     onClick={() => handleAnswerChange(currentQuestion.id, opt.label, multiCount)}
                     className={`w-full text-left rounded-lg border p-4 transition-colors ${
                       selected
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-teal-500 bg-teal-50'
                         : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -239,7 +253,7 @@ export function ExamRunner({ state }: Props) {
                       <span
                         className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold mt-0.5 ${
                           selected
-                            ? 'border-blue-500 bg-blue-500 text-white'
+                            ? 'border-teal-500 bg-teal-500 text-white'
                             : 'border-gray-300 text-gray-400'
                         }`}
                       >
@@ -264,7 +278,7 @@ export function ExamRunner({ state }: Props) {
               {currentIndex < questions.length - 1 ? (
                 <button
                   onClick={() => setCurrentIndex((i) => i + 1)}
-                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                  className="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
                 >
                   Next
                 </button>
