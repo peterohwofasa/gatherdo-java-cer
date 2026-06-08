@@ -8,12 +8,15 @@ function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+      className="w-full rounded-full bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50 transition-all hover:scale-[1.02]"
     >
       {pending ? 'Please wait…' : label}
     </button>
   )
 }
+
+const inputClass =
+  'w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all'
 
 export function AuthForm() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
@@ -36,7 +39,7 @@ export function AuthForm() {
   if (showConfirmation) {
     return (
       <div className="space-y-4">
-        <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+        <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
           Check your email for a confirmation link, then come back to sign in.
         </div>
         <button
@@ -45,7 +48,7 @@ export function AuthForm() {
             setMode('signin')
             setHideConfirmation(true)
           }}
-          className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="w-full rounded-full border border-gray-200 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
         >
           Back to Sign In
         </button>
@@ -57,7 +60,7 @@ export function AuthForm() {
     return (
       <form action={signinAction} className="space-y-4">
         <div>
-          <label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-1.5">
             Email
           </label>
           <input
@@ -66,11 +69,11 @@ export function AuthForm() {
             type="email"
             autoComplete="email"
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+            className={inputClass}
           />
         </div>
         <div>
-          <label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-1.5">
             Password
           </label>
           <input
@@ -79,7 +82,7 @@ export function AuthForm() {
             type="password"
             autoComplete="current-password"
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+            className={inputClass}
           />
         </div>
         {signinError && (
@@ -91,7 +94,7 @@ export function AuthForm() {
           <button
             type="button"
             onClick={() => setMode('signup')}
-            className="text-teal-600 hover:underline font-medium"
+            className="font-semibold text-teal-600 hover:underline"
           >
             Create one
           </button>
@@ -103,7 +106,7 @@ export function AuthForm() {
   return (
     <form action={signupAction} className="space-y-4">
       <div>
-        <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1.5">
           Email
         </label>
         <input
@@ -112,11 +115,11 @@ export function AuthForm() {
           type="email"
           autoComplete="email"
           required
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className={inputClass}
         />
       </div>
       <div>
-        <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1.5">
           Password
         </label>
         <input
@@ -126,7 +129,7 @@ export function AuthForm() {
           autoComplete="new-password"
           required
           minLength={6}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className={inputClass}
         />
       </div>
       {signupResult && signupResult !== 'CHECK_EMAIL' && (
@@ -138,7 +141,7 @@ export function AuthForm() {
         <button
           type="button"
           onClick={() => setMode('signin')}
-          className="text-teal-600 hover:underline font-medium"
+          className="font-semibold text-teal-600 hover:underline"
         >
           Sign in
         </button>

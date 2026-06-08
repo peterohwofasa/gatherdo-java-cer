@@ -41,7 +41,7 @@ export default async function InstructorPage() {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -69,7 +69,7 @@ export default async function InstructorPage() {
                 const score =
                   a.score_percent != null ? `${Number(a.score_percent).toFixed(1)}%` : '—'
                 return (
-                  <tr key={a.id} className="text-sm">
+                  <tr key={a.id} className="text-sm even:bg-gray-50 hover:bg-teal-50/50 transition-colors">
                     <td className="px-4 py-3 text-gray-800 whitespace-nowrap">
                       {student?.email ?? 'Unknown'}
                     </td>

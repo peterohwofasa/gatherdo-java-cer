@@ -11,7 +11,7 @@ export default async function AuthPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6 bg-gray-50">
-      <div className="w-full max-w-sm space-y-6">
+      <div className="w-full max-w-md space-y-8">
         <Link href="/" aria-label="GatherDO home" className="block">
           <Image
             src="/GatherDO_Technologies_Logo.png"
@@ -19,11 +19,11 @@ export default async function AuthPage() {
             width={1148}
             height={258}
             priority
-            className="mx-auto h-12 w-auto"
+            className="mx-auto h-14 w-auto"
           />
-          <p className="mt-2 text-sm text-gray-500 text-center">Java Certification Practice</p>
+          <p className="mt-3 text-sm text-gray-500 text-center">Java Certification Practice</p>
         </Link>
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-100 bg-white px-8 py-8 shadow-xl">
           <AuthForm />
         </div>
       </div>

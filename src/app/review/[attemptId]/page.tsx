@@ -144,7 +144,7 @@ export default async function ReviewPage({
           const correct = q.correct_answer
 
           return (
-            <div key={q.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div key={q.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden border-l-4 border-l-red-400">
               <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-600">
                   Question {q.question_number}
@@ -204,7 +204,7 @@ export default async function ReviewPage({
               </div>
 
               {q.explanation && (
-                <div className="mx-5 mb-5 rounded-md border border-teal-100 bg-teal-50 px-4 py-3">
+                <div className="mx-5 mb-5 rounded-lg border border-teal-100 bg-teal-50 px-4 py-3 border-l-4 border-l-teal-400">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-xs font-semibold text-teal-800 uppercase tracking-wide">Explanation</span>
                     {!q.explanation_verified && (
@@ -221,13 +221,13 @@ export default async function ReviewPage({
         <div className="flex gap-3 pb-8">
           <Link
             href={`/results/${attemptId}`}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="rounded-full border border-gray-200 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
           >
             Back to results
           </Link>
           <Link
             href="/exams"
-            className="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+            className="rounded-full bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-teal-700 hover:scale-[1.02] transition-all shadow-sm"
           >
             Take another exam
           </Link>

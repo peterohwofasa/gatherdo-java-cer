@@ -45,7 +45,7 @@ export default async function ExamsPage() {
           {(exams as Exam[] ?? []).map((exam) => {
             const resumeId = inProgressByExam.get(exam.id)
             return (
-              <div key={exam.id} className="bg-white rounded-lg border border-gray-200 p-6">
+              <div key={exam.id} className="bg-white rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition-all border-l-4 border-l-teal-500 p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="font-semibold text-gray-900">{exam.name}</h2>
@@ -60,7 +60,7 @@ export default async function ExamsPage() {
                   <form action={startAttempt.bind(null, exam.id)}>
                     <button
                       type="submit"
-                      className="whitespace-nowrap rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+                      className="whitespace-nowrap rounded-full bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700 hover:scale-[1.02] transition-all shadow-sm"
                     >
                       {resumeId ? 'Resume Exam' : 'Start Exam'}
                     </button>
@@ -94,7 +94,7 @@ async function PastAttempts({ userId }: { userId: string }) {
   return (
     <div className="mt-12">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Past Attempts</h2>
-      <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-100">
         {attempts.map((a) => {
           const exam = a.exams as unknown as { name: string; code: string } | null
           const date = a.finished_at
@@ -103,7 +103,7 @@ async function PastAttempts({ userId }: { userId: string }) {
               })
             : '—'
           return (
-            <div key={a.id} className="flex items-center justify-between px-4 py-3 text-sm">
+            <div key={a.id} className="flex items-center justify-between px-4 py-3 text-sm even:bg-gray-50 transition-colors hover:bg-teal-50/50">
               <div>
                 <span className="font-medium text-gray-800">{exam?.name ?? 'Unknown exam'}</span>
                 <span className="ml-2 text-gray-400 text-xs">{date}</span>

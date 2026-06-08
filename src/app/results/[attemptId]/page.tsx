@@ -89,18 +89,23 @@ export default async function ResultsPage({
 
       <main className="max-w-lg mx-auto p-8">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          {/* Pass/Fail banner */}
+          {/* Score hero banner */}
           <div
-            className={`px-6 py-8 text-center ${
-              passed ? 'bg-green-500' : 'bg-red-500'
+            className={`px-6 py-10 text-center ${
+              passed
+                ? 'bg-gradient-to-br from-emerald-500 to-teal-600'
+                : 'bg-gradient-to-br from-red-500 to-rose-600'
             }`}
           >
-            <div className="text-5xl font-black text-white mb-1">
+            <p className="text-7xl font-extrabold tabular-nums text-white mb-3">
+              {scorePercent.toFixed(1)}%
+            </p>
+            <span className="inline-block rounded-full border-2 border-white/30 px-5 py-1.5 text-sm font-bold text-white">
               {passed ? 'PASS' : 'FAIL'}
-            </div>
-            <div className="text-white/80 text-sm">
+            </span>
+            <p className="mt-3 text-sm text-white/70">
               {exam?.name ?? 'Java Certification'}
-            </div>
+            </p>
           </div>
 
           {/* Score details */}
@@ -153,9 +158,9 @@ export default async function ResultsPage({
                         </span>
                       </div>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-teal-500 rounded-full"
+                        className="h-full bg-teal-500 rounded-full transition-all duration-700"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -169,7 +174,7 @@ export default async function ResultsPage({
           <div className="px-6 pb-6 flex flex-col gap-3">
             <Link
               href={`/review/${attemptId}`}
-              className="block text-center rounded-md bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+              className="block text-center rounded-full bg-teal-600 px-6 py-3 text-sm font-semibold text-white hover:bg-teal-700 hover:scale-[1.02] transition-all shadow-sm"
             >
               Review wrong answers
             </Link>
@@ -177,13 +182,13 @@ export default async function ResultsPage({
               href={`/results/${attemptId}/print`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="block text-center rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:scale-[1.02] transition-all shadow-sm"
             >
               Download Summary
             </a>
             <Link
               href="/exams"
-              className="block text-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="block text-center rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:scale-[1.02] transition-all shadow-sm"
             >
               Take another exam
             </Link>
