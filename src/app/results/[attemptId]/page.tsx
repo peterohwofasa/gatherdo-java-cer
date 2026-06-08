@@ -54,6 +54,31 @@ export default async function ResultsPage({
       })
     : null
 
+  // Topic breakdown — join attempt_answers → questions.topic
+  const { data: answerRows } = await client
+    .from('attempt_answers')
+    .select('is_correct, questions(topic)')
+    .eq('attempt_id', attemptId)
+
+  type TopicStat = { total: number; correct: number }
+  const topicMap = new Map<string, TopicStat>()
+  for (const row of answerRows ?? []) {
+    const topic = (row.questions as unknown as { topic: string | null } | null)?.topic
+    if (!topic) continue
+    const stat = topicMap.get(topic) ?? { total: 0, correct: 0 }
+    stat.total++
+    if (row.is_correct) stat.correct++
+    topicMap.set(topic, stat)
+  }
+  const topicBreakdown = Array.from(topicMap.entries())
+    .map(([topic, { total, correct }]) => ({
+      topic,
+      total,
+      correct,
+      pct: total > 0 ? Math.round((correct / total) * 100) : 0,
+    }))
+    .sort((a, b) => a.pct - b.pct)
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header>
@@ -103,6 +128,42 @@ export default async function ResultsPage({
               </div>
             )}
           </div>
+
+          {/* Topic breakdown — only rendered when topic data exists (SE 17) */}
+          {topicBreakdown.length > 0 && (
+            <div className="px-6 py-5 border-t border-gray-100">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                Score by Topic
+              </h3>
+              <div className="space-y-3">
+                {topicBreakdown.map(({ topic, total, correct, pct }) => (
+                  <div key={topic}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-sm text-gray-700">{topic}</span>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className="text-xs text-gray-400 tabular-nums">{correct}/{total}</span>
+                        <span
+                          className={`text-sm font-semibold tabular-nums w-10 text-right ${
+                            pct >= (exam?.pass_percent ?? 68)
+                              ? 'text-green-600'
+                              : 'text-red-500'
+                          }`}
+                        >
+                          {pct}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-teal-500 rounded-full"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="px-6 pb-6 flex flex-col gap-3">
