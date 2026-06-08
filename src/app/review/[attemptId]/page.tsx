@@ -99,7 +99,7 @@ export default async function ReviewPage({
   // Load wrong questions with correct_answer via service client
   const { data: questionRows } = await svc
     .from('questions')
-    .select('id, question_number, question_text, code_block, correct_answer, topic')
+    .select('id, question_number, question_text, code_block, correct_answer, topic, explanation, explanation_verified')
     .in('id', wrongAnswerIds)
 
   const { data: optionRows } = await svc
@@ -196,6 +196,18 @@ export default async function ReviewPage({
                   )
                 })}
               </div>
+
+              {q.explanation && (
+                <div className="mx-5 mb-5 rounded-md border border-teal-100 bg-teal-50 px-4 py-3">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-xs font-semibold text-teal-800 uppercase tracking-wide">Explanation</span>
+                    {!q.explanation_verified && (
+                      <span className="text-xs text-gray-400 font-normal">· AI-generated — not yet verified</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-teal-900 leading-relaxed">{q.explanation}</p>
+                </div>
+              )}
             </div>
           )
         })}

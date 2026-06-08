@@ -30,6 +30,7 @@ interface RawQuestion {
   topic?: string
   difficulty?: string
   code_block?: string
+  explanation?: string
 }
 
 interface RawBank {
@@ -66,6 +67,7 @@ async function seedExam(examId: string, questions: RawQuestion[]) {
           correct_answer: q.correct_answer,
           topic: q.topic ?? null,
           difficulty: q.difficulty ?? null,
+          explanation: q.explanation ?? null,
         },
         { onConflict: 'exam_id,question_number' }
       )
