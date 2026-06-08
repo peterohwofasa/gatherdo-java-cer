@@ -67,7 +67,9 @@ async function seedExam(examId: string, questions: RawQuestion[]) {
           correct_answer: q.correct_answer,
           topic: q.topic ?? null,
           difficulty: q.difficulty ?? null,
-          explanation: q.explanation ?? null,
+          // Only include explanation when present in JSON so upsert preserves
+          // existing DB explanations for banks that don't carry the field.
+          ...(q.explanation !== undefined && { explanation: q.explanation }),
         },
         { onConflict: 'exam_id,question_number' }
       )
