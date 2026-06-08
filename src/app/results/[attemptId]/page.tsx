@@ -173,6 +173,14 @@ export default async function ResultsPage({
             >
               Review wrong answers
             </Link>
+            <a
+              href={`/results/${attemptId}/print`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Download Summary
+            </a>
             <Link
               href="/exams"
               className="block text-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
