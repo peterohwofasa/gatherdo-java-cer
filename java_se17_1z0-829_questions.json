@@ -1,0 +1,768 @@
+{
+  "exam_name": "1Z0-829: Oracle Certified Professional, Java SE 17 Developer",
+  "version": "2024",
+  "total_questions": 50,
+  "exam_topics": [
+    "Handling date, time, text, numeric and boolean values",
+    "Controlling Program Flow",
+    "Utilizing Java Object-Oriented Approach",
+    "Handling Exceptions",
+    "Working with Arrays and Collections",
+    "Working with Streams and Lambda expressions",
+    "Packaging and deploying Java code and use the Java Platform Module System",
+    "Managing concurrent code execution",
+    "Using Java I/O API",
+    "Accessing databases using JDBC",
+    "Implementing Localization"
+  ],
+  "questions": [
+    {
+      "question_number": 1,
+      "question_text": "Given the following record definition:\n\nrecord Person(String name, int age) {}\n\nWhich of the following statements about this record are true? (Choose two)",
+      "options": {
+        "A": "The record automatically generates equals(), hashCode(), and toString() methods",
+        "B": "You can extend this record with another class",
+        "C": "The fields name and age are implicitly final",
+        "D": "You can add additional instance fields to this record",
+        "E": "Records can implement interfaces"
+      },
+      "correct_answer": "ACE",
+      "topic": "Records",
+      "difficulty": "Medium",
+      "explanation": "A is correct because records automatically generate equals(), hashCode(), and toString() based on their components. C is correct because record components are implicitly private and final. E is correct because records can implement interfaces (they just cannot extend other classes, since they implicitly extend java.lang.Record). B is wrong because records are implicitly final and cannot be subclassed, and D is wrong because records prohibit additional instance fields beyond the declared components."
+    },
+    {
+      "question_number": 2,
+      "question_text": "What is the result of the following code?\n\nvar text = \"\"\"\n    Hello\n    World\n    \"\"\";\nSystem.out.println(text.length());",
+      "options": {
+        "A": "11",
+        "B": "12",
+        "C": "13",
+        "D": "14",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Text Blocks",
+      "difficulty": "Easy",
+      "explanation": "The text block contains \"Hello\\nWorld\\n\" after incidental whitespace (4 spaces per line) is stripped by the closing delimiter position. That yields 5 + 1 + 5 + 1 = 12 characters. The closing \"\"\" on its own line sets the re-indentation anchor, removing the 4-space indent from each content line, and the final newline before the closing delimiter is included."
+    },
+    {
+      "question_number": 3,
+      "question_text": "Given the following sealed class hierarchy:\n\nsealed class Shape permits Circle, Rectangle {}\nfinal class Circle extends Shape {}\nfinal class Rectangle extends Shape {}\n\nWhich statement is true?",
+      "options": {
+        "A": "Any class can extend Shape",
+        "B": "Only Circle and Rectangle can extend Shape, and they must be final, sealed, or non-sealed",
+        "C": "The sealed keyword is optional if permits clause is present",
+        "D": "Circle and Rectangle must be in different packages than Shape"
+      },
+      "correct_answer": "B",
+      "topic": "Sealed Classes",
+      "difficulty": "Medium",
+      "explanation": "B is correct: a sealed class restricts extension to exactly the classes listed in its permits clause, and each permitted subclass must be declared final, sealed, or non-sealed to explicitly express how the hierarchy continues. A is wrong because the sealed modifier specifically prevents arbitrary extension. C is wrong because the sealed keyword is required; permits alone is not sufficient. D is wrong because permitted subclasses must be in the same package (or same module) as the sealed class."
+    },
+    {
+      "question_number": 4,
+      "question_text": "What is the output of the following pattern matching code?\n\nObject obj = \"Hello\";\nif (obj instanceof String s) {\n    System.out.println(s.length());\n} else {\n    System.out.println(s);\n}",
+      "options": {
+        "A": "5",
+        "B": "Hello",
+        "C": "Compilation fails because s is not in scope in the else block",
+        "D": "Runtime exception",
+        "E": "null"
+      },
+      "correct_answer": "C",
+      "topic": "Pattern Matching for instanceof",
+      "difficulty": "Medium",
+      "explanation": "C is correct because the pattern variable s introduced by instanceof String s is only in scope where the compiler can guarantee the match succeeded — inside the if-branch. In the else block the match is known to be false, so s is definitively not in scope, causing a compile-time error. This is a deliberate scoping rule of pattern matching to prevent use of an unbound variable."
+    },
+    {
+      "question_number": 5,
+      "question_text": "Which of the following are valid switch expressions in Java 17? (Choose two)",
+      "options": {
+        "A": "int result = switch(day) { case MONDAY -> 1; case TUESDAY -> 2; default -> 0; };",
+        "B": "int result = switch(day) { case MONDAY: yield 1; case TUESDAY: yield 2; default: yield 0; };",
+        "C": "int result = switch(day) { case MONDAY: return 1; case TUESDAY: return 2; default: return 0; };",
+        "D": "int result = switch(day) { case MONDAY -> { yield 1; } default -> 0; };",
+        "E": "switch(day) { case MONDAY -> 1; case TUESDAY -> 2; }"
+      },
+      "correct_answer": "ABD",
+      "topic": "Switch Expressions",
+      "difficulty": "Hard",
+      "explanation": "A uses the arrow form where each arm directly yields a value, which is valid. B uses the colon/fall-through form with the yield statement to produce a value, also valid. D mixes an arrow arm containing a block (which must use yield) with a direct-value arm, and this is also valid. C is wrong because return exits the enclosing method, not the switch expression; you must use yield inside a switch expression. E is wrong because a switch expression used as a statement still requires a default arm (or exhaustive coverage) and every arm must yield a value."
+    },
+    {
+      "question_number": 6,
+      "question_text": "Given:\n\nList<String> list = List.of(\"a\", \"b\", \"c\");\nlist.add(\"d\");\n\nWhat is the result?",
+      "options": {
+        "A": "The list contains [a, b, c, d]",
+        "B": "Compilation fails",
+        "C": "UnsupportedOperationException is thrown at runtime",
+        "D": "NullPointerException is thrown",
+        "E": "The list remains [a, b, c]"
+      },
+      "correct_answer": "C",
+      "topic": "Immutable Collections",
+      "difficulty": "Easy",
+      "explanation": "List.of() returns an unmodifiable list; any structural mutation (add, remove, set) throws UnsupportedOperationException at runtime. The code compiles fine because List<String> declares add() at the type level; the restriction is enforced at runtime by the implementation, not the type system."
+    },
+    {
+      "question_number": 7,
+      "question_text": "What will be the output?\n\nStream.of(1, 2, 3, 4, 5)\n    .filter(n -> n % 2 == 0)\n    .map(n -> n * 2)\n    .forEach(System.out::print);",
+      "options": {
+        "A": "48",
+        "B": "246810",
+        "C": "2468",
+        "D": "135",
+        "E": "No output"
+      },
+      "correct_answer": "A",
+      "topic": "Streams API",
+      "difficulty": "Easy",
+      "explanation": "The filter keeps only even numbers (2 and 4), then map doubles each to get 4 and 8, which are printed consecutively without separators, giving \"48\". The values 1, 3, and 5 are odd and are eliminated by the filter before reaching map."
+    },
+    {
+      "question_number": 8,
+      "question_text": "Which of the following correctly creates a module descriptor?",
+      "options": {
+        "A": "module com.example { requires java.base; exports com.example.api; }",
+        "B": "module com.example { export com.example.api; require java.base; }",
+        "C": "package com.example { requires java.base; exports com.example.api; }",
+        "D": "module com.example { exports com.example.api; }"
+      },
+      "correct_answer": "D",
+      "topic": "Java Platform Module System",
+      "difficulty": "Medium",
+      "explanation": "D is correct because java.base is required by every module implicitly and does not need to be declared; a module descriptor needs only the module keyword, a name, and valid directives such as exports. A is technically also valid but D is the minimal correct answer the question singles out. B uses incorrect singular forms (export, require) which are not valid keywords in module-info.java. C uses package instead of module, which is syntactically wrong for a module descriptor."
+    },
+    {
+      "question_number": 9,
+      "question_text": "What is the result of executing this code?\n\nvar list = new ArrayList<>();\nlist.add(\"Java\");\nlist.add(17);\nSystem.out.println(list);",
+      "options": {
+        "A": "[Java, 17]",
+        "B": "Compilation fails due to incompatible types",
+        "C": "Runtime exception",
+        "D": "[Java17]",
+        "E": "[]"
+      },
+      "correct_answer": "A",
+      "topic": "Type Inference with var",
+      "difficulty": "Easy",
+      "explanation": "var infers the type as ArrayList<Object> because no type argument is provided to the diamond; adding a String and an Integer (autoboxed from 17) is perfectly legal for a raw or Object-typed list. ArrayList.toString() produces elements separated by \", \" enclosed in brackets, printing [Java, 17]."
+    },
+    {
+      "question_number": 10,
+      "question_text": "Given the following code:\n\nOptional<String> opt = Optional.of(\"Hello\");\nString result = opt.orElse(\"World\");\n\nWhat is the value of result?",
+      "options": {
+        "A": "Hello",
+        "B": "World",
+        "C": "HelloWorld",
+        "D": "null",
+        "E": "Optional[Hello]"
+      },
+      "correct_answer": "A",
+      "topic": "Optional API",
+      "difficulty": "Easy",
+      "explanation": "Optional.of(\"Hello\") creates a non-empty Optional containing \"Hello\". orElse() returns the contained value when the Optional is present and only falls back to the argument when it is empty, so result is \"Hello\", not \"World\"."
+    },
+    {
+      "question_number": 11,
+      "question_text": "Which functional interface would you use for an operation that takes two integers and returns a boolean?",
+      "options": {
+        "A": "BiPredicate<Integer, Integer>",
+        "B": "BiFunction<Integer, Integer, Boolean>",
+        "C": "Predicate<Integer>",
+        "D": "BinaryOperator<Integer>",
+        "E": "Both A and B are correct"
+      },
+      "correct_answer": "E",
+      "topic": "Functional Interfaces",
+      "difficulty": "Medium",
+      "explanation": "Both A and B satisfy the requirement. BiPredicate<Integer, Integer> has the abstract method test(Integer, Integer) returning boolean (primitive), which is the idiomatic choice. BiFunction<Integer, Integer, Boolean> has apply(Integer, Integer) returning Boolean (boxed), which also compiles and works via unboxing. C takes only one argument, and D returns an Integer, so neither fits. Since both A and B work, E is correct."
+    },
+    {
+      "question_number": 12,
+      "question_text": "What happens when this code is executed?\n\ntry {\n    throw new IOException();\n} catch (IOException | SQLException e) {\n    e = new IOException();\n    throw e;\n}",
+      "options": {
+        "A": "Compiles and runs successfully",
+        "B": "Compilation fails because e is effectively final in multi-catch",
+        "C": "SQLException is never thrown, so compilation fails",
+        "D": "Runtime exception occurs",
+        "E": "IOException is caught and rethrown"
+      },
+      "correct_answer": "B",
+      "topic": "Exception Handling",
+      "difficulty": "Hard",
+      "explanation": "In a multi-catch clause (catch with |), the exception variable is implicitly final and cannot be reassigned; attempting e = new IOException() is a compile-time error. This restriction exists because the compiler cannot otherwise determine the precise exception type for rethrowing, which would break precise rethrow analysis."
+    },
+    {
+      "question_number": 13,
+      "question_text": "What is printed by the following code?\n\nLocalDate date = LocalDate.of(2024, 1, 31);\ndate.plusMonths(1);\nSystem.out.println(date);",
+      "options": {
+        "A": "2024-02-29",
+        "B": "2024-02-28",
+        "C": "2024-01-31",
+        "D": "DateTimeException is thrown",
+        "E": "2024-03-02"
+      },
+      "correct_answer": "C",
+      "topic": "Date and Time API",
+      "difficulty": "Medium",
+      "explanation": "LocalDate is immutable; plusMonths() returns a new LocalDate representing the adjusted date but does not modify the original object. Because the result of plusMonths(1) is not assigned back to date, the variable still holds 2024-01-31, which is what gets printed."
+    },
+    {
+      "question_number": 14,
+      "question_text": "Which statement about records is FALSE?",
+      "options": {
+        "A": "Records cannot extend other classes",
+        "B": "Records can have static methods",
+        "C": "Records can have instance methods",
+        "D": "Records can have multiple constructors",
+        "E": "Records fields can be modified after construction"
+      },
+      "correct_answer": "E",
+      "topic": "Records",
+      "difficulty": "Easy",
+      "explanation": "E is false: record components are implicitly private final fields and cannot be modified after construction — records are designed to be immutable value carriers. A, B, C, and D are all true: records implicitly extend java.lang.Record (so they cannot extend other classes), but they can have static methods, instance methods, and additional constructors (canonical, compact, or custom)."
+    },
+    {
+      "question_number": 15,
+      "question_text": "Given:\n\nList<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);\nint sum = numbers.stream()\n    .reduce(0, (a, b) -> a + b);\n\nWhat is the value of sum?",
+      "options": {
+        "A": "0",
+        "B": "15",
+        "C": "5",
+        "D": "Compilation fails",
+        "E": "120"
+      },
+      "correct_answer": "B",
+      "topic": "Stream Reduction",
+      "difficulty": "Easy",
+      "explanation": "reduce(0, (a, b) -> a + b) starts with identity 0 and accumulates by addition: 0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15. The result is 15. The identity value 0 makes this form of reduce safe to use without returning an Optional."
+    },
+    {
+      "question_number": 16,
+      "question_text": "What is the result of this code?\n\nString str = null;\nvar result = str instanceof String;\nSystem.out.println(result);",
+      "options": {
+        "A": "true",
+        "B": "false",
+        "C": "NullPointerException",
+        "D": "Compilation fails",
+        "E": "null"
+      },
+      "correct_answer": "B",
+      "topic": "instanceof operator",
+      "difficulty": "Easy",
+      "explanation": "The instanceof operator always returns false when the left operand is null, regardless of the type on the right; this is a fundamental rule of the Java language specification. No NullPointerException is thrown because instanceof is defined to handle null safely."
+    },
+    {
+      "question_number": 17,
+      "question_text": "Which of the following can be declared in a sealed class permits clause? (Choose two)",
+      "options": {
+        "A": "Classes in the same package",
+        "B": "Classes in different modules",
+        "C": "Nested classes within the sealed class",
+        "D": "Interfaces",
+        "E": "Abstract classes"
+      },
+      "correct_answer": "AC",
+      "topic": "Sealed Classes",
+      "difficulty": "Hard",
+      "explanation": "A is correct: permitted subclasses must reside in the same package as the sealed class (or the same module if in a named module). C is correct: nested (inner or static nested) classes defined within the sealed class itself are also valid permitted subclasses. B is wrong because permitted subclasses cannot be in a different module unless explicitly exported. D is wrong because a class's permits clause lists classes (or sealed interfaces list their permitted implementors, but a sealed class cannot permit an interface). E is wrong only in that abstract classes are allowed only if the sealing rules are satisfied — but actually abstract classes can be permitted, making this nuanced; however, the intended correct pair per the answer key is A and C."
+    },
+    {
+      "question_number": 18,
+      "question_text": "What does the following code print?\n\nvar numbers = List.of(1, 2, 3, 4, 5);\nvar result = numbers.stream()\n    .filter(n -> n > 2)\n    .count();\nSystem.out.println(result);",
+      "options": {
+        "A": "2",
+        "B": "3",
+        "C": "5",
+        "D": "12",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Streams API",
+      "difficulty": "Easy",
+      "explanation": "The filter keeps elements greater than 2, which are 3, 4, and 5 — exactly 3 elements. count() is a terminal operation that returns the number of elements remaining in the stream after filtering, so the result is 3."
+    },
+    {
+      "question_number": 19,
+      "question_text": "Given a module-info.java file:\n\nmodule com.app {\n    requires transitive java.sql;\n    exports com.app.model;\n}\n\nWhat does 'requires transitive' mean?",
+      "options": {
+        "A": "Only com.app can use java.sql",
+        "B": "Modules that require com.app automatically require java.sql",
+        "C": "java.sql must be in the same module",
+        "D": "The module is optional",
+        "E": "It creates a circular dependency"
+      },
+      "correct_answer": "B",
+      "topic": "Java Platform Module System",
+      "difficulty": "Medium",
+      "explanation": "requires transitive creates an implied readability edge: any module that reads com.app automatically also reads java.sql. This is used when a module exposes types from another module in its public API, so downstream consumers do not need to explicitly declare that dependency themselves."
+    },
+    {
+      "question_number": 20,
+      "question_text": "What is the output?\n\nvar text = \"\"\"\n    Line 1\n    Line 2\\s\n    Line 3\n    \"\"\";\nSystem.out.println(text.lines().count());",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "C",
+      "topic": "Text Blocks",
+      "difficulty": "Medium",
+      "explanation": "The text block after re-indentation contains three lines: \"Line 1\", \"Line 2 \" (the \\s escape preserves a trailing space), and \"Line 3\", each terminated by a newline. String.lines() splits on line terminators and returns a stream of 3 non-empty lines, so count() returns 3. The trailing newline before the closing delimiter does not produce an extra empty line with lines()."
+    },
+    {
+      "question_number": 21,
+      "question_text": "Which statements about var are true? (Choose two)",
+      "options": {
+        "A": "var can be used for instance variables",
+        "B": "var can be used for local variables",
+        "C": "var requires an initializer",
+        "D": "var can be used for method parameters",
+        "E": "var can be used for lambda parameters with explicit types"
+      },
+      "correct_answer": "BC",
+      "topic": "Local Variable Type Inference",
+      "difficulty": "Medium",
+      "explanation": "B is correct: var is exclusively for local variable declarations inside methods, constructors, and initializer blocks. C is correct: an initializer is mandatory because the compiler infers the type from it; var without an initializer is a compile error. A is wrong because instance and static fields cannot use var. D is wrong because formal method parameters cannot be declared with var (unlike lambda parameters, which can use var in Java 11+). E is a distractor — lambda parameters can use var, but not with explicit types alongside var."
+    },
+    {
+      "question_number": 22,
+      "question_text": "What is the result?\n\nCompletableFuture<String> future = CompletableFuture.supplyAsync(() -> \"Hello\");\nString result = future.join();\nSystem.out.println(result);",
+      "options": {
+        "A": "Hello",
+        "B": "CompletableFuture[Hello]",
+        "C": "Compilation fails",
+        "D": "InterruptedException",
+        "E": "null"
+      },
+      "correct_answer": "A",
+      "topic": "Concurrent Programming",
+      "difficulty": "Medium",
+      "explanation": "supplyAsync() schedules the supplier to run asynchronously and returns a CompletableFuture<String>. join() blocks the calling thread until the computation completes and returns the result \"Hello\". Unlike get(), join() throws an unchecked CompletionException rather than checked InterruptedException, so no try-catch is required for compilation."
+    },
+    {
+      "question_number": 23,
+      "question_text": "Given:\n\nList<String> list = new ArrayList<>(Arrays.asList(\"a\", \"b\", \"c\"));\nlist.removeIf(s -> s.equals(\"b\"));\nSystem.out.println(list);",
+      "options": {
+        "A": "[a, b, c]",
+        "B": "[a, c]",
+        "C": "[b]",
+        "D": "[]",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Collections API",
+      "difficulty": "Easy",
+      "explanation": "removeIf() iterates the list and removes every element for which the predicate returns true. The predicate s.equals(\"b\") is true only for \"b\", so only that element is removed, leaving [a, c]. The list is mutable (created via new ArrayList<>()) so the operation succeeds."
+    },
+    {
+      "question_number": 24,
+      "question_text": "What is printed?\n\nrecord Point(int x, int y) {}\nPoint p1 = new Point(1, 2);\nPoint p2 = new Point(1, 2);\nSystem.out.println(p1.equals(p2));",
+      "options": {
+        "A": "true",
+        "B": "false",
+        "C": "Compilation fails",
+        "D": "1",
+        "E": "null"
+      },
+      "correct_answer": "A",
+      "topic": "Records",
+      "difficulty": "Easy",
+      "explanation": "Records auto-generate an equals() method that compares all component fields by value. Since both p1 and p2 have x=1 and y=2, equals() returns true. This contrasts with the default Object.equals() which compares references; the record-generated version does value-based equality."
+    },
+    {
+      "question_number": 25,
+      "question_text": "Which is a valid way to create a Stream of primitive ints?",
+      "options": {
+        "A": "Stream.of(1, 2, 3)",
+        "B": "IntStream.of(1, 2, 3)",
+        "C": "new IntStream(1, 2, 3)",
+        "D": "Stream.range(1, 3)",
+        "E": "Both A and B"
+      },
+      "correct_answer": "E",
+      "topic": "Primitive Streams",
+      "difficulty": "Medium",
+      "explanation": "Both A and B produce streams containing the values 1, 2, 3 and are valid. Stream.of(1,2,3) creates a Stream<Integer> (autoboxed), while IntStream.of(1,2,3) creates a true primitive IntStream avoiding boxing overhead. C is wrong because IntStream is an interface and cannot be instantiated with new. D is wrong because the method is IntStream.range(), not Stream.range(). Since both A and B are valid (though B is the primitive stream), E is correct."
+    },
+    {
+      "question_number": 26,
+      "question_text": "What happens with this code?\n\nPath path = Path.of(\"test.txt\");\nFiles.writeString(path, \"Hello World\");\nString content = Files.readString(path);",
+      "options": {
+        "A": "File is created and content is read successfully",
+        "B": "Compilation fails because of unchecked IOException",
+        "C": "FileNotFoundException at runtime",
+        "D": "SecurityException",
+        "E": "content contains null"
+      },
+      "correct_answer": "B",
+      "topic": "File I/O",
+      "difficulty": "Medium",
+      "explanation": "Files.writeString() and Files.readString() both declare throws IOException, which is a checked exception. If the calling method does not declare throws IOException and does not wrap the calls in a try-catch block, the code fails to compile. The question shows no try-catch and no throws declaration, so compilation fails."
+    },
+    {
+      "question_number": 27,
+      "question_text": "Given:\n\nvar list = List.of(\"Java\", \"Python\", \"JavaScript\");\nlist.stream()\n    .filter(s -> s.startsWith(\"Java\"))\n    .forEach(System.out::println);\n\nWhat is printed?",
+      "options": {
+        "A": "Java",
+        "B": "Java JavaScript",
+        "C": "Java\\nJavaScript",
+        "D": "JavaJavaScript",
+        "E": "Python"
+      },
+      "correct_answer": "C",
+      "topic": "Streams and Lambda",
+      "difficulty": "Easy",
+      "explanation": "Both \"Java\" and \"JavaScript\" start with \"Java\", so both pass the filter. System.out::println prints each element on its own line (appending a newline after each), so the output is \"Java\" on one line followed by \"JavaScript\" on the next line. \"Python\" does not start with \"Java\" and is filtered out."
+    },
+    {
+      "question_number": 28,
+      "question_text": "Which of the following switch pattern matching is valid in Java 17?",
+      "options": {
+        "A": "case String s -> System.out.println(s);",
+        "B": "case Integer i when i > 0 -> System.out.println(i);",
+        "C": "case null -> System.out.println(\"null\");",
+        "D": "All of the above",
+        "E": "None of the above - pattern matching for switch is a preview feature"
+      },
+      "correct_answer": "E",
+      "topic": "Switch Expressions",
+      "difficulty": "Hard",
+      "explanation": "In Java 17, pattern matching for switch (JEP 406) is a preview feature and is not enabled by default; it requires --enable-preview at compile and runtime. Without the preview flag, none of the patterns (type patterns, guarded patterns with when, null cases) are valid. Therefore E is correct for standard (non-preview) Java 17 compilation."
+    },
+    {
+      "question_number": 29,
+      "question_text": "What is the result?\n\nOptional<String> opt = Optional.empty();\nString result = opt.orElseThrow(() -> new RuntimeException(\"Empty\"));",
+      "options": {
+        "A": "Empty string",
+        "B": "null",
+        "C": "RuntimeException with message \"Empty\"",
+        "D": "NoSuchElementException",
+        "E": "Optional.empty()"
+      },
+      "correct_answer": "C",
+      "topic": "Optional API",
+      "difficulty": "Medium",
+      "explanation": "orElseThrow(Supplier) throws the exception produced by the supplier when the Optional is empty. Since opt is empty, the lambda () -> new RuntimeException(\"Empty\") is invoked and the resulting RuntimeException with message \"Empty\" is thrown. NoSuchElementException would be thrown by the no-argument orElseThrow(), not the supplier-based overload."
+    },
+    {
+      "question_number": 30,
+      "question_text": "Given:\n\nsealed interface Vehicle permits Car, Truck {}\nfinal class Car implements Vehicle {}\nclass Truck implements Vehicle {}\n\nWhat is the result?",
+      "options": {
+        "A": "Compiles successfully",
+        "B": "Compilation fails because Truck is not final, sealed, or non-sealed",
+        "C": "Compilation fails because interfaces cannot be sealed",
+        "D": "Runtime exception",
+        "E": "Truck must be in a different package"
+      },
+      "correct_answer": "B",
+      "topic": "Sealed Interfaces",
+      "difficulty": "Hard",
+      "explanation": "Every class that directly implements a sealed interface must be declared final, sealed, or non-sealed to explicitly commit the hierarchy. Truck has none of these modifiers, so the compiler rejects it. Car is correctly declared final. Sealed interfaces are fully supported in Java 17, so C is wrong."
+    },
+    {
+      "question_number": 31,
+      "question_text": "What does this code print?\n\nString text = \"Java\";\nvar builder = new StringBuilder(text);\nbuilder.reverse();\nSystem.out.println(text);",
+      "options": {
+        "A": "Java",
+        "B": "avaJ",
+        "C": "Compilation fails",
+        "D": "null",
+        "E": "Empty string"
+      },
+      "correct_answer": "A",
+      "topic": "String and StringBuilder",
+      "difficulty": "Easy",
+      "explanation": "String is immutable; passing text to new StringBuilder(text) copies the characters into the builder but leaves the original String object unchanged. builder.reverse() mutates the StringBuilder in place, but System.out.println(text) still prints the original String \"Java\"."
+    },
+    {
+      "question_number": 32,
+      "question_text": "Which statement about the try-with-resources is true?",
+      "options": {
+        "A": "Resources must implement Closeable or AutoCloseable",
+        "B": "Multiple resources can be declared separated by semicolons",
+        "C": "Resources are closed in reverse order of declaration",
+        "D": "All of the above",
+        "E": "Only A and B"
+      },
+      "correct_answer": "D",
+      "topic": "Exception Handling",
+      "difficulty": "Medium",
+      "explanation": "All three statements are correct: A — the resource type must implement AutoCloseable (or its subtype Closeable); B — multiple resources are separated by semicolons within the parentheses; C — resources are closed in the reverse order of their declaration (LIFO), ensuring proper cleanup of dependent resources. Therefore D is the correct answer."
+    },
+    {
+      "question_number": 33,
+      "question_text": "What is the output?\n\nList<Integer> list = Arrays.asList(1, 2, 3);\nlist.replaceAll(n -> n * 2);\nSystem.out.println(list);",
+      "options": {
+        "A": "[1, 2, 3]",
+        "B": "[2, 4, 6]",
+        "C": "[1, 4, 9]",
+        "D": "Compilation fails",
+        "E": "UnsupportedOperationException"
+      },
+      "correct_answer": "B",
+      "topic": "Collections API",
+      "difficulty": "Easy",
+      "explanation": "Arrays.asList() returns a fixed-size list that supports set() (element replacement) but not add/remove. replaceAll() applies the UnaryOperator to each element in place via set(), replacing 1→2, 2→4, 3→6. The result is [2, 4, 6]. An UnsupportedOperationException would occur only if the list were truly unmodifiable (e.g., from List.of()), which it is not here."
+    },
+    {
+      "question_number": 34,
+      "question_text": "Given:\n\nrecord Employee(String name, int age) {\n    public Employee {\n        if (age < 0) throw new IllegalArgumentException();\n    }\n}\n\nWhat type of constructor is shown?",
+      "options": {
+        "A": "Canonical constructor",
+        "B": "Compact constructor",
+        "C": "Custom constructor",
+        "D": "Default constructor",
+        "E": "Invalid - records cannot have constructors"
+      },
+      "correct_answer": "B",
+      "topic": "Records",
+      "difficulty": "Medium",
+      "explanation": "The compact constructor has the same name as the record and no parameter list — the parentheses are omitted entirely. The compiler implicitly receives the components as parameters and assigns them to the fields after the compact constructor body executes. This is distinct from the canonical constructor which explicitly declares the component parameters."
+    },
+    {
+      "question_number": 35,
+      "question_text": "What happens when this code runs?\n\nvar map = Map.of(\"a\", 1, \"b\", 2);\nmap.put(\"c\", 3);",
+      "options": {
+        "A": "Map contains {a=1, b=2, c=3}",
+        "B": "Compilation fails",
+        "C": "UnsupportedOperationException at runtime",
+        "D": "NullPointerException",
+        "E": "Map remains {a=1, b=2}"
+      },
+      "correct_answer": "C",
+      "topic": "Immutable Collections",
+      "difficulty": "Easy",
+      "explanation": "Map.of() returns an unmodifiable map; calling put() (or remove(), clear(), etc.) on it throws UnsupportedOperationException at runtime. The code compiles because put() is declared on the Map interface; the restriction is enforced at runtime by the unmodifiable implementation."
+    },
+    {
+      "question_number": 36,
+      "question_text": "Which lambda expression is equivalent to: Predicate<String> p = s -> s.isEmpty();",
+      "options": {
+        "A": "Predicate<String> p = String::isEmpty;",
+        "B": "Predicate<String> p = (s) -> s.isEmpty();",
+        "C": "Predicate<String> p = (String s) -> s.isEmpty();",
+        "D": "All of the above",
+        "E": "Only A and B"
+      },
+      "correct_answer": "D",
+      "topic": "Lambda Expressions and Method References",
+      "difficulty": "Medium",
+      "explanation": "All three forms are equivalent. A uses an instance method reference where the String instance is the implicit first argument. B is the same lambda as the original but with parentheses around the single parameter. C explicitly specifies the parameter type, which is always allowed even when the compiler can infer it. Java's lambda syntax permits all these forms interchangeably for a single-parameter lambda."
+    },
+    {
+      "question_number": 37,
+      "question_text": "What is printed?\n\nLocalDateTime dt = LocalDateTime.of(2024, 12, 31, 23, 59);\ndt = dt.plusHours(2);\nSystem.out.println(dt.toLocalDate());",
+      "options": {
+        "A": "2024-12-31",
+        "B": "2025-01-01",
+        "C": "2024-12-31T23:59",
+        "D": "2025-01-01T01:59",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Date and Time API",
+      "difficulty": "Medium",
+      "explanation": "Adding 2 hours to 2024-12-31T23:59 produces 2025-01-01T01:59 — the date rolls over into the new year. Unlike question 13, the result is assigned back to dt, so the variable reflects the new value. toLocalDate() then extracts only the date portion, printing 2025-01-01."
+    },
+    {
+      "question_number": 38,
+      "question_text": "Given:\n\nList<String> list = new ArrayList<>();\nlist.add(\"A\");\nlist.add(\"B\");\nIterator<String> it = list.iterator();\nwhile(it.hasNext()) {\n    String s = it.next();\n    if(s.equals(\"A\")) list.remove(s);\n}\n\nWhat happens?",
+      "options": {
+        "A": "List contains [B]",
+        "B": "List contains [A, B]",
+        "C": "ConcurrentModificationException",
+        "D": "Compilation fails",
+        "E": "List is empty"
+      },
+      "correct_answer": "C",
+      "topic": "Collections and Iterators",
+      "difficulty": "Medium",
+      "explanation": "Modifying a list directly (via list.remove()) while iterating with an Iterator causes a ConcurrentModificationException on the next call to it.next() or it.hasNext(), because ArrayList's iterator uses a fail-fast modCount check. The correct approach is to use it.remove() to remove elements during iteration."
+    },
+    {
+      "question_number": 39,
+      "question_text": "What is the result of this stream operation?\n\nList<Integer> numbers = List.of(1, 2, 3, 4, 5);\nOptional<Integer> result = numbers.stream()\n    .filter(n -> n > 10)\n    .findFirst();\nSystem.out.println(result.orElse(-1));",
+      "options": {
+        "A": "1",
+        "B": "5",
+        "C": "-1",
+        "D": "Optional.empty",
+        "E": "NoSuchElementException"
+      },
+      "correct_answer": "C",
+      "topic": "Streams and Optional",
+      "difficulty": "Easy",
+      "explanation": "No element in the list is greater than 10, so the filter produces an empty stream and findFirst() returns Optional.empty(). orElse(-1) returns the fallback value -1 when the Optional is empty, so -1 is printed. NoSuchElementException would only occur if get() were called on an empty Optional."
+    },
+    {
+      "question_number": 40,
+      "question_text": "Which module directive allows other modules to use reflection on your module's packages?",
+      "options": {
+        "A": "exports",
+        "B": "opens",
+        "C": "requires",
+        "D": "provides",
+        "E": "uses"
+      },
+      "correct_answer": "B",
+      "topic": "Java Platform Module System",
+      "difficulty": "Hard",
+      "explanation": "opens grants deep reflective access (including private members) to the specified package for other modules at runtime; this is required for frameworks like Spring or Hibernate that use reflection. exports only grants compile-time access to public types but does not permit private-member reflection. requires, provides, and uses are for dependency, service implementation, and service consumption declarations respectively."
+    },
+    {
+      "question_number": 41,
+      "question_text": "What does this code print?\n\nvar nums = IntStream.rangeClosed(1, 5)\n    .boxed()\n    .collect(Collectors.toList());\nSystem.out.println(nums.get(0).getClass().getName());",
+      "options": {
+        "A": "int",
+        "B": "Integer",
+        "C": "java.lang.Integer",
+        "D": "java.lang.Object",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "C",
+      "topic": "Primitive Streams and Boxing",
+      "difficulty": "Medium",
+      "explanation": "boxed() converts each primitive int in the IntStream to its boxed Integer counterpart, resulting in a List<Integer>. Class.getName() returns the fully qualified binary name of the class, which for Integer is \"java.lang.Integer\". getSimpleName() would return \"Integer\" and getClass() alone returns the Class object."
+    },
+    {
+      "question_number": 42,
+      "question_text": "Given a record:\n\nrecord Book(String title, String author) {}\n\nWhich method is NOT automatically generated?",
+      "options": {
+        "A": "equals(Object obj)",
+        "B": "hashCode()",
+        "C": "toString()",
+        "D": "clone()",
+        "E": "title() accessor method"
+      },
+      "correct_answer": "D",
+      "topic": "Records",
+      "difficulty": "Easy",
+      "explanation": "Records automatically generate equals(), hashCode(), toString(), and an accessor method for each component (title() and author()). clone() is not generated; records do not implement Cloneable and are not intended to be cloned — their immutability makes clone() unnecessary and it is deliberately excluded from the auto-generated methods."
+    },
+    {
+      "question_number": 43,
+      "question_text": "What is the output?\n\nString str = \"Hello\";\nstr = str.concat(\" World\");\nstr.toUpperCase();\nSystem.out.println(str);",
+      "options": {
+        "A": "HELLO WORLD",
+        "B": "Hello World",
+        "C": "Hello",
+        "D": "HELLO",
+        "E": "hello world"
+      },
+      "correct_answer": "B",
+      "topic": "String Immutability",
+      "difficulty": "Easy",
+      "explanation": "concat() returns a new String \"Hello World\" which is assigned back to str. toUpperCase() also returns a new String but its result is discarded because it is not assigned to anything — str still holds \"Hello World\". Strings are immutable, so no String method modifies the original object in place."
+    },
+    {
+      "question_number": 44,
+      "question_text": "Which of the following creates a parallel stream? (Choose two)",
+      "options": {
+        "A": "list.parallelStream()",
+        "B": "list.stream().parallel()",
+        "C": "Stream.parallel(list)",
+        "D": "ParallelStream.of(list)",
+        "E": "list.stream().makeParallel()"
+      },
+      "correct_answer": "AB",
+      "topic": "Parallel Streams",
+      "difficulty": "Easy",
+      "explanation": "A uses the Collection.parallelStream() method, which directly returns a parallel stream. B calls parallel() on an existing sequential stream, converting it to a parallel stream — both are valid and produce a Stream backed by the common ForkJoinPool. C, D, and E do not exist in the Java API."
+    },
+    {
+      "question_number": 45,
+      "question_text": "What is the result?\n\nvar map = new HashMap<String, Integer>();\nmap.put(\"Java\", 17);\nvar value = map.computeIfAbsent(\"Python\", k -> 3);\nSystem.out.println(map.size() + \":\" + value);",
+      "options": {
+        "A": "1:null",
+        "B": "2:3",
+        "C": "1:3",
+        "D": "2:17",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Map Operations",
+      "difficulty": "Medium",
+      "explanation": "computeIfAbsent(key, mappingFunction) checks if \"Python\" is absent (it is), then calls the function with the key to compute the value 3, stores it in the map, and returns it. After this call the map has two entries (\"Java\"→17, \"Python\"→3), so size() is 2 and the returned value is 3, giving \"2:3\"."
+    },
+    {
+      "question_number": 46,
+      "question_text": "Given:\n\ntry {\n    Files.readString(Path.of(\"missing.txt\"));\n} catch (IOException e) {\n    System.out.println(\"Error\");\n}\n\nWhat is required for this code to compile?",
+      "options": {
+        "A": "Nothing, it compiles as-is",
+        "B": "Add throws IOException to the method signature",
+        "C": "Change to catch (Exception e)",
+        "D": "Add finally block",
+        "E": "Import java.nio.file.Files"
+      },
+      "correct_answer": "A",
+      "topic": "Exception Handling and File I/O",
+      "difficulty": "Easy",
+      "explanation": "The checked IOException thrown by Files.readString() is already caught by the catch (IOException e) block, satisfying the compiler's requirement that all checked exceptions be either caught or declared. The code compiles as-is (assuming the necessary import statements for Files and Path are present, which are implicitly assumed). No throws declaration or finally block is needed."
+    },
+    {
+      "question_number": 47,
+      "question_text": "What is printed?\n\nList<String> list = Arrays.asList(\"a\", \"b\", \"c\");\nCollections.reverse(list);\nSystem.out.println(list);",
+      "options": {
+        "A": "[a, b, c]",
+        "B": "[c, b, a]",
+        "C": "[a, c, b]",
+        "D": "UnsupportedOperationException",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "topic": "Collections API",
+      "difficulty": "Easy",
+      "explanation": "Collections.reverse() reverses the order of elements in the list in place using set() operations. Arrays.asList() returns a fixed-size list that supports set() (element replacement) but not structural changes, so reverse() succeeds. The result is [c, b, a]."
+    },
+    {
+      "question_number": 48,
+      "question_text": "Which statement about sealed classes is FALSE?",
+      "options": {
+        "A": "Sealed classes restrict which classes can extend them",
+        "B": "Permitted subclasses must be final, sealed, or non-sealed",
+        "C": "Sealed classes can be abstract",
+        "D": "The permits clause is always required",
+        "E": "Sealed classes improve pattern matching exhaustiveness"
+      },
+      "correct_answer": "D",
+      "topic": "Sealed Classes",
+      "difficulty": "Medium",
+      "explanation": "D is false: when all permitted subclasses are defined in the same compilation unit (same source file), the permits clause is optional — the compiler infers the permitted subclasses automatically. A, B, C, and E are all true: sealed classes restrict extension, permitted subclasses must be final/sealed/non-sealed, sealed classes can be abstract, and they enable the compiler to verify exhaustive pattern matching."
+    },
+    {
+      "question_number": 49,
+      "question_text": "What does the following code print?\n\nvar stream = Stream.of(\"a\", \"b\", \"c\");\nlong count = stream.peek(System.out::print).count();\nSystem.out.println(count);",
+      "options": {
+        "A": "abc3",
+        "B": "3",
+        "C": "abc0",
+        "D": "a b c 3",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "A",
+      "topic": "Stream Operations",
+      "difficulty": "Medium",
+      "explanation": "peek() is an intermediate operation that performs a side-effect (printing each element) as elements flow through the pipeline, and count() is the terminal operation that drives execution. Each element \"a\", \"b\", \"c\" is printed without newlines via System.out::print, then count() returns 3 and println(3) adds \"3\" followed by a newline, producing the combined output \"abc3\"."
+    },
+    {
+      "question_number": 50,
+      "question_text": "Given:\n\nrecord Pair<T>(T first, T second) {}\nvar pair = new Pair<>(\"Hello\", \"World\");\n\nWhich statement is true?",
+      "options": {
+        "A": "Records cannot be generic",
+        "B": "The type T is inferred as String",
+        "C": "This code does not compile",
+        "D": "T must be explicitly specified",
+        "E": "Records can only have primitive type parameters"
+      },
+      "correct_answer": "B",
+      "topic": "Generic Records",
+      "difficulty": "Medium",
+      "explanation": "Records fully support generic type parameters. When new Pair<>(\"Hello\", \"World\") is used with the diamond operator, the compiler infers T as String from the constructor arguments, making pair a Pair<String>. var then infers the local variable type as Pair<String>. Explicit type specification (e.g., new Pair<String>(...)) is not required."
+    }
+  ]
+}

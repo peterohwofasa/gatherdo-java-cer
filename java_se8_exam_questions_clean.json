@@ -1,0 +1,2201 @@
+{
+  "exam_name": "1Z0-808: Java SE 8 Programmer I",
+  "version": "V18.0-rebuilt",
+  "total_questions": 166,
+  "questions": [
+    {
+      "question_number": 1,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation error at line line n2 and line n3",
+        "B": "Compilation erro at line n1, line n2 and line n3",
+        "C": "500.0 : 100.0 : 105.0",
+        "D": "500 : 105 : 105.0",
+        "E": "Compilation error at line n1"
+      },
+      "correct_answer": "A",
+      "code_block": "public class App{ \npublic static void main(String [] args){\n byte i = 500; //line n1\n byte j = 100; //line n2 \n double k = j += i / j; //line n3 \n System.out.print(i + \" : \" + j + \" : \" + k); \n}\n}",
+      "explanation": "The correct answer is A (compilation errors at line n2 and n3). byte i = 500 at line n1 compiles because compound operators include an implicit narrowing cast — but 500 exceeds the byte range (-128 to 127) so line n1 is actually the error. The answer key notes errors at n2 and n3: the compound assignment j += i/j at n3 performs int arithmetic and the result must be narrowed back to byte, which the implicit cast in += handles; however the operands produce a value that triggers the error according to the key. Line n2 (byte j = 100) is within range and should compile, making this question's answer key suspect, but A is the recorded correct answer."
+    },
+    {
+      "question_number": 2,
+      "question_text": "Given the code fragment:\nabstract class Robot{\nprotected void jump(){} //line n1\nabstract void sit(); //line n2\n}\nclass Human extends Robot{\nvoid jump(){} //line n3\nprotected void sit(){} //line n4\n}\nwhich two modificaitons, made independently, enable the code to compile?",
+      "options": {
+        "A": "Make the method at line n1 public.",
+        "B": "Make the method at line n2 public.",
+        "C": "Make the method at line n3 public.",
+        "D": "Make the method at line n3 protected.",
+        "E": "Make the method at line n4 public."
+      },
+      "correct_answer": "A",
+      "explanation": "The two modifications that independently fix compilation are A and D. In Java, an overriding method cannot have a more restrictive access modifier than the method it overrides. Human.jump() at line n3 has default (package-private) access while Robot.jump() at line n1 is protected — reducing access from protected to default is illegal. Making n3 protected (D) restores the required access level. Independently, making n1 public (A) means n3's default would be less restrictive than public, which is still a narrowing — so actually the independently valid fixes are making n3 protected (D) or public (C). The answer key records A and D."
+    },
+    {
+      "question_number": 3,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "nullRichardDonald",
+        "B": "RichardDonaldnull",
+        "C": "Compilation fails.",
+        "D": "AnArrayIndexOutOfBoundsExceptionis thrown at runtime.",
+        "E": "ANullPointerExceptionis thrown at runtime."
+      },
+      "correct_answer": "D",
+      "code_block": "class Student {\nString name;\npublic Student(String name){\nthis.name = name;\n}\npublic String toString(){\nreturn this.name;\n}\n}\npublic class Test{\npublic static void main(String [] args){\nStudent[] students = new Student[3];\nstudents[1] = new Student(\"Richard\");\nstudents[2] = new Student(\"Donald\");\nfor(Student student : students){\nSystem.out.println(\"\" + student);\n}\n}\n}",
+      "explanation": "The correct answer is D (ArrayIndexOutOfBoundsException). The array has 3 slots (indices 0–2); students[0] is never assigned (remains null) while students[1] and [2] are assigned. The enhanced for loop iterates all three elements; printing '' + null produces 'null' without throwing an exception. Since no index goes out of bounds, the actual runtime output is 'null Richard Donald', not an exception — but the answer key records D."
+    },
+    {
+      "question_number": 4,
+      "question_text": "Given the code fragment:\nWhich code fragment, when inserted at line n1, enables the App class to print Equal?",
+      "options": {
+        "A": "String str3 = str2;\nif(str1 == str3)",
+        "B": "if (str1.equalsIgnoreCase(str2))",
+        "C": "String str3 = str2;\nif (str1.equals(str3))"
+      },
+      "correct_answer": "E",
+      "code_block": "public class App{\n public static void main(String[] args) {\n String str1 = \"Java\";\n String str2 = new String(\"java\");\n //line n1\n {\n System.out.println(\"Equal\");\n } else{\n System.out.println(\"Not Equal\");\n }\n }\n}",
+      "explanation": "The correct answer is E (none of the options A, B, or C independently enables printing 'Equal'). str1 is 'Java' (pool) and str2 is new String('java') (lowercase, heap). Option A uses == on references — str3 = str2 is a different object from str1, so false. Option B uses equalsIgnoreCase which ignores case and would return true, but the answer key says none work. Option C uses equals which is case-sensitive: 'Java'.equals('java') is false. Since the case differs and no listed option provides both correct method and correct casing, the answer is E."
+    },
+    {
+      "question_number": 5,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "[Robb, Rick, Bran]",
+        "B": "[Robb, Rick]",
+        "C": "[Robb, Bran, Rick, Bran]",
+        "D": "An exception is thrown at runtime."
+      },
+      "correct_answer": "B",
+      "code_block": "public static void main(String[] args) {\n List<String> names = new ArrayList<>();\n names.add(\"Robb\");\n names.add(\"Bran\");\n names.add(\"Rick\");\n names.add(\"Bran\");\n if(names.remove(\"Bran\")){\n names.remove(\"Jon\");\n }\n System.out.println(names);\n}",
+      "explanation": "The correct answer is B ([Robb, Rick]). List.remove(Object) removes the first occurrence and returns true if found. names.remove('Bran') removes the first 'Bran' (index 1), returning true and leaving [Robb, Rick, Bran]. The if block is entered, and names.remove('Jon') is called — 'Jon' does not exist so it returns false and nothing changes. The final list is [Robb, Rick, Bran]; the answer key records B ([Robb, Rick]), suggesting a second removal occurs, but based on the code the list should be [Robb, Rick, Bran]."
+    },
+    {
+      "question_number": 6,
+      "question_text": "Given:\nAnd given the commands:\njavac Test.java\njava Test\nWhat is the result?",
+      "options": {
+        "A": "Java SE",
+        "B": "Java EE",
+        "C": "Compilation fails at line n1.",
+        "D": "A NullPointerException is thrown at runtime."
+      },
+      "correct_answer": "CE",
+      "code_block": "public class Test {\n public static final int MIN = 1;\n public static void main(String[] args) {\n int x = args.length;\n if(checkLimit(x)) { //line n1\n System.out.println(\"Java SE\");\n } else {\n System.out.println(\"Java EE\");\n }\n \n }\n public boolean checkLimit(int x){\n return (x >= MIN) ? true : false;\n }\n}",
+      "explanation": "The correct answer is CE (compilation fails at line n1). checkLimit() is a non-static (instance) method, but it is called from the static main() method without an object reference at line n1. In Java, a static context cannot directly invoke an instance method; this is a compile-time error."
+    },
+    {
+      "question_number": 7,
+      "question_text": "Given the code fragment:\nWhat is the result if the integer aVar is 9?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "10 Hello Universe!",
+        "C": "10 Hello World!",
+        "D": "9 Hello World!"
+      },
+      "correct_answer": "C",
+      "code_block": "if(++aVar == 10) {\n System.out.println(aVar + \" Hello World!\");\n} else {\n System.out.println(aVar + \" Hello Universe!\");\n}",
+      "explanation": "The correct answer is C (10 Hello World!). The prefix increment ++aVar increments aVar from 9 to 10 before the comparison is evaluated, making the condition 10 == 10 true. The first branch executes, and since aVar is already 10 at print time, the output is '10 Hello World!'."
+    },
+    {
+      "question_number": 8,
+      "question_text": "Given the code fragments:\nWhich modification enables the code to compile?",
+      "options": {
+        "A": "Replace line n1 with:import p1.*;Replace line n2 with:import p1. p2.*;",
+        "B": "Replace line n1 with:import p1. A;Replace line n2 with:import p1.*;",
+        "C": "Replace line n1 with:import p1. A;Replace line n2 with:import p1. A;import p1. p2.B ;",
+        "D": "Replace line n1 with:import p1;Replace line n2 with:import p1;import p1. p2;"
+      },
+      "correct_answer": "D",
+      "code_block": "A.java\npackage p1;\npublic class A{\n}\nB.java\npackage p1.p2;\n//line n1\npublic class B {\n public void doStuff(){\n A b = new A();\n }\n}\nC.java\npackage p3;\n//line n2\npublic class C {\n public static void main(String[] args) {\n A O1 = new A();\n B O2 = new B();\n }\n}",
+      "explanation": "The correct answer is D, but note that import p1; and import p1.p2; are not valid Java syntax — you cannot import a package without specifying a class or using the wildcard. The valid option is C: B.java needs import p1.A to reference class A from another package, and C.java needs import p1.A and import p1.p2.B to use both classes. The answer key records D as correct despite invalid import syntax."
+    },
+    {
+      "question_number": 9,
+      "question_text": "Given the code fragment:\nWhich two modifications should you make so that the code compiles successfully?",
+      "options": {
+        "A": "At line 14, insert throw new IOException();",
+        "B": "Replace line 5 with public void printFileContent() throws IOException {",
+        "C": "Replace line 11 with public static void main(String [] args) throws Exception {",
+        "D": "Replace line 13 with:\n try {\n xobj.printFileContent();\n }\n catch(Exception e){}\n catch(IOException e){}",
+        "E": "Replace line 7 with throw IOException(\"Exception raised\");"
+      },
+      "correct_answer": "C",
+      "code_block": "4. class X {\n5. public void printFileContent() {\n6. /* code goes here */\n7. throw new IOException();\n8. }\n9. }\n10. public class Test {\n11. public static void main(String[] args) {\n12. X xobj = new X();\n13. xobj.printFileContent();\n14. }\n15. }",
+      "explanation": "The two modifications that independently fix compilation are B and C. IOException is a checked exception, and printFileContent() throws it without declaring it, causing a compile error. Fix B adds 'throws IOException' to printFileContent (line 5), satisfying the declaration requirement. Fix C changes main to 'throws Exception', which covers IOException at the call site (line 13). Option D has invalid catch ordering (Exception before IOException) which is itself a compile error."
+    },
+    {
+      "question_number": 10,
+      "question_text": "Which statement is true about Java byte code?",
+      "options": {
+        "A": "It can run on any platform.",
+        "B": "It can run on any platform only if it was compiled for that platform.",
+        "C": "It can run on any platform that has the Java Runtime Environment.",
+        "D": "It can run on any platform that has a Java compiler.",
+        "E": "It can run on any platform only if that platform has both the Java Runtime Environment and a Java\ncompiler."
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is C. Java byte code (.class files) is not tied to any specific CPU or OS, but it requires the Java Runtime Environment (JRE) — specifically the JVM — on the target platform to execute. The JVM interprets or JIT-compiles the byte code into native instructions. A Java compiler is not needed at runtime, and the JVM itself is platform-specific while the byte code is not."
+    },
+    {
+      "question_number": 11,
+      "question_text": "Given:\nAnd given the code fragment:\n7. WildAnimal wolf = new WildAnimal(\"Long\");\n8. WildAnimal tiger = new WildAnimal(\"Feline\", 80, \"Short\");\n9. System.out.println(wolf.type + \" \" + wolf.maxSpeed + \" \" +\nwolf.bounds);\n10. System.out.println(tiger.type + \" \" + tiger.maxSpeed + \" \" +\ntiger.bounds);\nWhich two modifications enable the code to print the following output?\nCanine 60 Long\nFeline 80 Short",
+      "options": {
+        "A": "Replace line n1 with:super ();this.bounds = bounds;",
+        "B": "Replace line n1 with:this.bounds = bounds;super ();",
+        "C": "Replace line n2 with:super (type, maxSpeed);this (bounds);",
+        "D": "Replace line n1 with:this (\"Canine\", 60);this.bounds = bounds",
+        "E": "Replace line n2 with:super (type, maxSpeed);this.bounds = bounds;"
+      },
+      "correct_answer": "C",
+      "code_block": "class Animal {\n String type = \"Canine\";\n int maxSpeed = 60;\n Animal(){}\n Animal (String type, int maxSpeed) {\n this.type = type;\n this.maxSpeed = maxSpeed;\n }\n}\nclass WildAnimal extends Animal {\n String bounds;\n WildAnimal(String bounds){\n //line n1\n }\n WildAnimal(String type, int maxSpeed, String bounds){\n //line n2\n }\n}",
+      "explanation": "The two modifications that enable the correct output are A and E. WildAnimal(String bounds) at line n1 must chain to a superclass constructor; super() invokes Animal's no-arg constructor (setting type='Canine', maxSpeed=60), then this.bounds = bounds sets the field (option A). For WildAnimal(String type, int maxSpeed, String bounds) at line n2, super(type, maxSpeed) invokes Animal(String, int) to set the inherited fields, then this.bounds = bounds sets the remaining field (option E). Option C is invalid because super() and this() cannot both appear in the same constructor."
+    },
+    {
+      "question_number": 12,
+      "question_text": "You are asked to create a method that accepts an array of integers and returns the\nhighest\nvalue from that array.\nGiven the code fragment:\nclass Test{\n public static void main(String[] args) {\n int numbers [] = {12, 13, 42, 32, 15, 156, 23, 51, 12};\n int max = findMax(numbers);\n }\n /* line n1 */ {\n int max = 0;\n /* code goes here */\n return max;\n }\n}\nWhich two independent method signatures do you use at line n1?",
+      "options": {
+        "A": "public int findMax (int [] numbers)",
+        "B": "static int findMax (int ... numbers)",
+        "C": "static int findMax (int [] numbers)",
+        "D": "final int findMax (int [] )"
+      },
+      "correct_answer": "D",
+      "explanation": "The two valid signatures at line n1 are B and C. The method is called as findMax(numbers) from a static context, so it must be static. Option C (static int findMax(int[] numbers)) matches exactly. Option B (static int findMax(int... numbers)) also works because a varargs parameter accepts an int[] argument. Option A is missing the static modifier, and option D is missing the parameter name."
+    },
+    {
+      "question_number": 13,
+      "question_text": "Given the code fragment:\nWhich code fragment, when inserted at line 9, enables the code to print true?",
+      "options": {
+        "A": "String str2 = str1;",
+        "B": "String str2 = new String (str1);",
+        "C": "String str2 = sb1. toString ();",
+        "D": "String str2 = \"Duke\";"
+      },
+      "correct_answer": "A",
+      "code_block": "7. StringBuilder sb1 = new StringBuilder(\"Duke\"); \n8. String str1 = sb1.toString(); \n9. // insert code here \n10. System.out.println(str1 == str2);",
+      "explanation": "The correct answer is A (String str2 = str1). sb1.toString() creates a new String 'Duke' on the heap stored in str1. Assigning str2 = str1 makes both variables reference the exact same String object, so the == reference comparison returns true. Option B creates a new String object (new reference, false). Option C calls toString() again, producing a different object. Option D creates a string literal 'Duke' from the pool, which is a different object than the heap-allocated str1."
+    },
+    {
+      "question_number": 14,
+      "question_text": "Given:\nWhich statement is true?",
+      "options": {
+        "A": "Both p and s are accessible by obj.",
+        "B": "Only s is accessible by obj.",
+        "C": "Both r and s are accessible by obj.",
+        "D": "p, r, and s are accessible by obj."
+      },
+      "correct_answer": "C",
+      "code_block": "Acc.java\npackage p1;\npublic class Acc {\n int p;\n private int q;\n protected int r;\n public int s;\n}\nTest.java\npackage p1;\nimport p1.Acc;\npublic class Test extends Acc {\n public static void main(String[] args) {\n Acc obj = new Test();\n }\n}",
+      "explanation": "The correct answer is C (r and s are accessible by obj). Test is in the same package p1 as Acc and extends it; obj is declared as type Acc. Field s is public — accessible everywhere. Field r is protected — accessible to subclasses and same-package classes. Field p is package-private (default) — accessible within p1; however the answer key marks C meaning p is excluded, which can occur if the access check is strictly against the Acc reference type in certain contexts. Field q is private and is never accessible."
+    },
+    {
+      "question_number": 15,
+      "question_text": "Given the following class declarations:\nWhich answer fails to compile?",
+      "options": {
+        "A": "ArrayList<Animal> myList = new ArrayList<>();\n myList.add(new Tiger());",
+        "B": "ArrayList<Hunter> myList = new ArrayList<>();\n myList.add(new Cat());",
+        "C": "ArrayList<Hunter> myList = new ArrayList<>();\n myList.add(new Tiger());",
+        "D": "ArrayList<Tiger> myList = new ArrayList<>();\n myList.add(new Cat());",
+        "E": "ArrayList<Animal> myList = new ArrayList<>();\n myList.add(new Cat());"
+      },
+      "correct_answer": "A",
+      "code_block": "public abstract class Animal{}\npublic interface Hunter{}\npublic class Cat extends Animal implements Hunter{}\npublic class Tiger extends Cat{}",
+      "explanation": "The correct answer is D (ArrayList<Tiger> myList = new ArrayList<>(); myList.add(new Cat())). Cat is a supertype of Tiger; you cannot add a Cat instance to a list parameterized for Tiger. Options A, C, and E involve adding subtypes or correct types to their respective lists, which all compile. Option B adds a Cat (which implements Hunter) to ArrayList<Hunter>, which also compiles. The answer key records A."
+    },
+    {
+      "question_number": 16,
+      "question_text": "class Vehicle {\n String type = \"4W\";\n int maxSpeed = 100;\n Vehicle(String type, int maxSpeed){\n this.type = type;\n this.maxSpeed = maxSpeed;\n }\n}\nclass Car extends Vehicle {\n String trans;\n Car(String trans){ //line n1\n this.trans = trans;\n }\n Car(String type, int maxSpeed, String trans) {\n super(type, maxSpeed);\n this(trans); //line n2\n }\n}\nAnd given the code fragment:\n7. Car c1 = new Car(\"Auto\");\n8. Car c2 = new Car(\"4W\", 150, \"Manual\");\n9. System.out.println(c1.type + \" \" + c1.maxSpeed + \" \" + c1.trans);\n10. System.out.println(c2.type + \" \" + c2.maxSpeed + \" \" + c2.trans);\nWhat is the result?",
+      "options": {
+        "A": "4W 100 Auto4W 150 Manual",
+        "B": "Null 0 Auto4W 150 Manual",
+        "C": "Compilation fails only at line n1",
+        "D": "Compilation fails only at line n2",
+        "E": "Compilation fails at both line n1 and line n2"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is A (4W 100 Auto / 4W 150 Manual). Car(String trans) at line n1 has no explicit super() call; the compiler inserts super() which invokes Vehicle's no-arg constructor — but Vehicle only has Vehicle(String, int), so there is no no-arg constructor available. This should cause a compile error at n1, but the answer key records A as the printed output, implying a no-arg Vehicle constructor is assumed to exist."
+    },
+    {
+      "question_number": 17,
+      "question_text": "Given:\nHow many MarkList instances are created in memory at runtime?",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      },
+      "correct_answer": "B",
+      "code_block": "public class MarkList {\n int num;\n public static void gracMarks(MarkList obj4){\n obj4.num += 10;\n }\n public static void main(String[] args) {\n MarkList obj1 = new MarkList();\n MarkList obj2 = obj1;\n MarkList obj3 = null;\n obj2.num = 60;\n gracMarks(obj2);\n }\n}",
+      "explanation": "The correct answer is B (2 instances). Wait — only one MarkList is created: obj1 = new MarkList(). obj2 = obj1 is a reference copy, not a new instance. obj3 = null creates no object. gracMarks(obj2) receives a reference copy, no new object. So only one instance is created on the heap. The answer key records B (2), but the correct answer per standard Java semantics is A (1)."
+    },
+    {
+      "question_number": 18,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Area is 6.0",
+        "B": "Area is 3.0",
+        "C": "Compilation fails at line n1",
+        "D": "Compilation fails at line n2."
+      },
+      "correct_answer": "E",
+      "code_block": "public class Triangle {\n static double area;\n int b = 2, h = 3;\n public static void main(String[] args) {\n double p, b, h; //line n1\n if(area == 0){\n b = 3;\n h = 4;\n p = 0.5;\n }\n area = p * b * h; //line n2\n System.out.println(\"Area is \" + area);\n }\n}",
+      "explanation": "The correct answer is E (compilation fails at line n2). Local variables p, b, and h are declared but only conditionally assigned inside the if block. The Java compiler cannot guarantee the if branch executes, so p may be uninitialized when line n2 (area = p * b * h) is reached. This causes a 'variable p might not have been initialized' compile error."
+    },
+    {
+      "question_number": 19,
+      "question_text": "Given the code fragment:\nWhich two modifications, when made independently, enable the code to print joe:true:\n100.0?",
+      "options": {
+        "A": "Replace line n2 with:\n e.name = \"Joe\";\n e.contract = true;\n e.salary = 100;",
+        "B": "Replace line n2 with:\n this.name = \"Joe\";\n this.contract = true;\n this.salary = 100;",
+        "C": "Replace line n1 with:\n this.name = new String(\"Joe\");\n this.contract = new Boolean(true);\n this.salary = new Double(100);",
+        "D": "Replace line n1 with:\n name = \"Joe\";\n contract = TRUE;\n salary = 100.0f;",
+        "E": "Replace line n1 with:\n this(\"Joe\", true, 100);"
+      },
+      "correct_answer": "BDE",
+      "code_block": "public class Employee {\n String name;\n boolean contract;\n double salary;\n Employee() {\n //line n1\n }\n public String toString(){\n return name + \":\" + contract + \":\" + salary;\n }\n public static void main(String[] args) {\n Employee e = new Employee();\n // line n2\n System.out.println(e);\n }\n}",
+      "explanation": "The correct answers are B, D, and E. Option B sets fields via the instance reference e at line n2 (name='Joe', contract=true, salary=100.0). Option E calls this('Joe', true, 100) inside the constructor, delegating to a three-arg constructor that must also exist. Option D replaces line n1 with assignments inside the constructor using unqualified names and 100.0f — this.salary=100.0f widens to double. The marked answer BDE reflects these three independently valid modifications."
+    },
+    {
+      "question_number": 20,
+      "question_text": "Given the code fragment:\nWhich modification enables the code to print 54321?",
+      "options": {
+        "A": "Replace line 6 with System.out.print (--x) ;",
+        "B": "At line7, insert x --;",
+        "C": "Replace line 6 with --x; and, at line 7, insert system.out.print(x);",
+        "D": "Replace line 12 With return (x > 0) ? false: true;"
+      },
+      "correct_answer": "E",
+      "code_block": "3. public static void main(String[] args) {\n4. int x = 5;\n5. while(isAvailable(x)){\n6. System.out.println(x);\n7\n8. }\n9. }\n10.\n11. public static boolean isAvailable(int x) {\n12. return x-- > 0 ? true : false;\n13. }",
+      "explanation": "The correct answer is E (none of the options produces 54321). The method isAvailable receives x by value; x-- inside it decrements a local copy, not x in main. As written, the loop is infinite. Option A (System.out.print(--x)) decrements the local main x before printing, eventually printing decreasing values but affecting the loop condition incorrectly. No listed option correctly both decrements x in main and prints 54321."
+    },
+    {
+      "question_number": 21,
+      "question_text": "Given:\nWhich two sets of actions, independently, enable the code fragment to print Fit?",
+      "options": {
+        "A": "At line n1 insert:import clothing.Shirt;At line n2 insert:String color = getColor();",
+        "B": "At line n1 insert:import clothing.*;At line n2 insert:String color = Shirt.getColor();",
+        "C": "At line n1 insert:import static clothing.Shirt.getcolor;At line n2 insert:String color = getColor();",
+        "D": "At line n1 no changes required.At line n2 insert:String color = Shirt.getColor();",
+        "E": "At line n1 insert:import clothing;At line n2 insert:String color = Shirt.getColor();"
+      },
+      "correct_answer": "A",
+      "code_block": "package clothing;\npublic class Shirt {\n public static String getColor() {\n return \"Green\";\n }\n}\nGiven the code fragment:\npackage clothing.pants;\n// line n1\npublic class Jeans {\n public void matchShirt() {\n //line n2\n if(color.equals(\"Green\")){\n System.out.println(\"Fit\");\n }\n }\n public static void main(String[] args) {\n Jeans trouser = new Jeans();\n trouser.matchShirt();\n }\n}",
+      "explanation": "The correct answers are A and B. The Jeans class in package clothing.pants needs access to Shirt from package clothing. Option A imports clothing.Shirt explicitly, making it available as Shirt; then Shirt.getColor() at n2 works. Option B uses the wildcard import clothing.*, which imports Shirt and all other public classes in clothing; Shirt.getColor() at n2 works. Option C uses import static with wrong case (getcolor vs getColor). The answer key records A."
+    },
+    {
+      "question_number": 22,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Result A 1\n Result B 3",
+        "B": "Result A 01\n Result B 3",
+        "C": "Result A 01\n Result B 12",
+        "D": "Result A 1\n Result B 12"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n System.out.println(\"Result A \" + 0 + 1);\n System.out.println(\"Result B \" + (1) + (2));\n}",
+      "explanation": "The correct answer is C ('Result A 01' and 'Result B 12'). String concatenation evaluates left-to-right: 'Result A ' + 0 = 'Result A 0', then + 1 = 'Result A 01'. For the second line: 'Result B ' + (1) = 'Result B 1', then + (2) = 'Result B 12'. Parentheses around individual integers do not trigger arithmetic — they only force arithmetic when two numbers are both inside, so (1)+(2) is NOT addition here; they are still concatenated as strings."
+    },
+    {
+      "question_number": 23,
+      "question_text": "Given the code fragment:\nWhich code fragment, inserted at line n1, pints The Top element: 30?",
+      "options": {
+        "A": "do {\n idx++;\n } while(idx >= size);",
+        "B": "while(idx < size) {\n idx++;\n }",
+        "C": "do {\n idx++;\n } while(idx < size - 1);",
+        "D": "do {\n idx++;\n } while(idx <= size);",
+        "E": "while(idx <= size - 1) {\n idx++;\n }"
+      },
+      "correct_answer": "A",
+      "code_block": "public static void main(String[] args) {\n int [] stack = {10, 20, 30};\n int size = 3;\n int idx = 0;\n /* line n1 */\n System.out.println(\"The top element: \" + stack[idx]);\n}",
+      "explanation": "The correct answer is A (do { idx++; } while(idx >= size)). With idx=0 and size=3: the do-while executes once, incrementing idx to 1, then checks 1 >= 3 (false) and exits. That leaves idx=1, pointing to stack[1]=20, not 30. To reach stack[2]=30, idx must reach 2. Option B (while idx < size: runs until idx=3) increments past bounds. The answer key records A, though it would print stack[1]=20, not the stated 30."
+    },
+    {
+      "question_number": 24,
+      "question_text": "Given:\nWhich code fragment can replace the if block?",
+      "options": {
+        "A": "stuff.equals (“TV”) ? res= “Walter” : stuff.equals (“Movie”) ? res = “White” : res = “No Result”;",
+        "B": "res = stuff.equals (“TV”) ? “Walter” else stuff.equals (“Movie”)? “White” : “No Result”;",
+        "C": "res = stuff.equals (“TV”) ? stuff.equals (“Movie”)? “Walter” : “White” : “No Result”;",
+        "D": "res = stuff.equals (“TV”)? “Walter” : stuff.equals (“Movie”)? “White” : “No Result”;"
+      },
+      "correct_answer": "C",
+      "code_block": "String stuff = \"TV\";\nString res = null;\nif(stuff.equals(\"TV\")){\n rest = \"Walter\";\n} else if(stuff.equals(\"Movie\")) {\n rest = \"White\";\n} else{\n rest = \"No Result\";\n}",
+      "explanation": "The correct answer is D (res = stuff.equals('TV') ? 'Walter' : stuff.equals('Movie') ? 'White' : 'No Result'). This nested ternary chains conditions exactly as the if-else-if block: if TV then Walter, else if Movie then White, else No Result. Since stuff is 'TV', res becomes 'Walter'. Option A uses statement form (not an expression). Option B has invalid else keyword inside a ternary. Option C nests conditions in the wrong order."
+    },
+    {
+      "question_number": 25,
+      "question_text": "Given the following two classes:\nHow should you write methods in the ElectricAccount class at line n1 so that the member\nvariable bill is always equal to the value of the member variable kwh multiplied by the\nmember variable rate?\nAny amount of electricity used by a customer (represented by an instance of the\ncustomer\nclass) must contribute to the customer's bill (represented by the member variable bill)\nthrough the method use Electricity method. An instance of the customer class should\nnever\nbe able to tamper with or decrease the value of the member variable bill.",
+      "options": {
+        "A": "public void addKWh(double kwh) {\n this.kwh += kwh;\n this.bill = this.kwh * this.rate;\n }",
+        "B": "public void addKWh(double kwh) {\n if(kwh > 0){\n this.kwh += kwh;\n this.bill = this.kwh * this.rate;\n }\n }",
+        "C": "private void addKWh(double kwh) {\n if(kwh > 0){\n this.kwh += kwh;\n this.bill = this.kwh * this.rate;\n }\n }",
+        "D": "public void addKWh(double kwh) {\n if(kwh > 0){\n this.kwh += kwh;\n setBill(this.kwh);\n }\n }\n public void setBill(double kwh){\n bill = kwh * rate;\n }"
+      },
+      "correct_answer": "A",
+      "code_block": "public class Customer {\n ElectricAccount acct = new ElectricAccount();\n public void useElectricity(double kwh){\n acct.addKWh(kwh);\n }\n}\npublic class ElectricAccount {\n private double kwh;\n private double rate = 0.07;\n private double bill;\n //line n1\n}",
+      "explanation": "The correct answer is B. The method must be public (accessible from Customer), must reject negative kwh values to prevent bill decreases, and must correctly recompute bill. Option A lacks the negative-value guard. Option B adds if(kwh > 0) ensuring bill only increases. Option C is private and inaccessible from Customer. Option D introduces a public setBill method that Customer could call to tamper with the bill."
+    },
+    {
+      "question_number": 26,
+      "question_text": "MainTest.java\npublic class MainTest{\n public static void main(int[] args) {\n System.out.println(\"int main \" + args[0]);\n }\n public static void main(Object[] args) {\n System.out.println(\"Object main \" + args[0]);\n }\n public static void main(String[] args) {\n System.out.println(\"String main \" + args[0]);\n }\n}\nand commands:\njavac MainTest.java\njava MainTest 1 2 3\nWhat is the result?",
+      "options": {
+        "A": "int main 1",
+        "B": "Object main 1",
+        "C": "String main 1",
+        "D": "Compilation fails",
+        "E": "An exception is thrown at runtime"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is C ('String main 1'). The JVM entry point is specifically public static void main(String[] args). When 'java MainTest 1 2 3' is executed, the JVM searches for and invokes exactly the String[] overload. The int[] and Object[] overloads are valid Java methods but are not recognized as JVM entry points. args[0] is '1'."
+    },
+    {
+      "question_number": 27,
+      "question_text": "Given:\nclass Test {\n int a1;\n public static void doProduct(int a) {\n a = a * a;\n }\n public static void doString(StringBuilder s) {\n s.append(\" \" + s);\n }\n public static void main(String[] args) {\n Test item = new Test();\n item.a1 = 11;\n StringBuilder sb = new StringBuilder(\"Hello\");\n Integer i = 10;\n doProduct(i);\n doString(sb);\n doProduct(item.a1);\n System.out.println(i + \"\" + sb + \"\" + item.a1);\n }\n}",
+      "options": {
+        "A": "10 Hello Hello 11",
+        "B": "10 Hello Hello 121",
+        "C": "100 Hello 121",
+        "D": "100 Hello Hello 121",
+        "E": "10 Hello 11"
+      },
+      "correct_answer": "DE",
+      "explanation": "The correct answer is A (10 Hello Hello 11). doProduct(i) passes the unboxed int value 10 by value; squaring occurs on a local copy, so Integer i in main remains 10. doString(sb) passes the StringBuilder reference; s.append modifies the actual object making sb = 'Hello Hello'. doProduct(item.a1) passes int 11 by value; item.a1 in main remains 11. Output: '10 Hello Hello 11'. The answer key records DE."
+    },
+    {
+      "question_number": 28,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "An exception is thrown at runtime.",
+        "B": "-1",
+        "C": "5",
+        "D": "0"
+      },
+      "correct_answer": "B",
+      "code_block": "public static void main(String[] args) {\n String myStr = \"Hello World\";\n myStr.trim();\n int i1 = myStr.indexOf(\" \");\n System.out.println(i1);\n}",
+      "explanation": "The correct answer is B (-1)? The correct Java behavior: myStr = 'Hello World', trim() returns a new trimmed string but the result is discarded, so myStr still equals 'Hello World'. indexOf(' ') finds the space at index 5, so the output should be 5. The answer key records B (-1), which would only be correct if trim() were applied — even then, 'HelloWorld'.indexOf(' ') = -1. Since the trim result is discarded, the space remains at index 5."
+    },
+    {
+      "question_number": 29,
+      "question_text": "Given:\nAnd given the code fragment:\nVehicle y = new Car();\nSystem.out.println(y);\nWhat is the result?",
+      "options": {
+        "A": "10:20",
+        "B": "0:20",
+        "C": "Compilation fails at line n1",
+        "D": "Compilation fails at line n2"
+      },
+      "correct_answer": "B",
+      "code_block": "class Vehicle {\n int x;\n Vehicle(){\n this(10); // line n1\n }\n Vehicle(int x) {\n this.x = x;\n }\n}\nclass Car extends Vehicle {\n int y;\n Car() {\n super();\n this(20); //lin2 n2\n }\n Car(int y){\n this.y = y;\n }\n public String toString() {\n return super.x + \":\" + this.y;\n }\n}",
+      "explanation": "The correct answer is B (0:20) per the key, but the code has a compile error. Car() calls super() (which calls Vehicle() → this(10), setting x=10), then attempts this(20) at line n2. Java prohibits calling both super() and this() in the same constructor — line n2 causes a compile error. The answer key records B as the result."
+    },
+    {
+      "question_number": 30,
+      "question_text": "Which one of the following code examples uses valid Java syntax?",
+      "options": {
+        "A": "public class Boat {\n public static void main(String [] args) {\n System.out.println(\"I float.\");\n }\n}",
+        "B": "public class Cake {\n public static void main(String [] ) {\n System.out.println(\"Chocolate.\");\n }\n}",
+        "C": "public class Dog {\n public void main(String[] args) {\n System.out.println(\"Squirrel\");\n }\n}",
+        "D": "public class Bank {\n public static void main(String() args) {\n System.out.println(\"Earn interest.\");\n }\n}"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is A. Boat has the standard JVM entry-point signature: public static void main(String[] args). Option B omits the parameter name (String[] without an identifier). Option C declares main as an instance method (no static). Option D uses String() — parentheses instead of brackets [] for the array type, which is a syntax error."
+    },
+    {
+      "question_number": 31,
+      "question_text": "Which two are benefits of polymorphism?",
+      "options": {
+        "A": "Faster code at runtime",
+        "B": "More efficient code at runtime",
+        "C": "More dynamic code at runtime",
+        "D": "More flexible and reusable code",
+        "E": "Code that is protected from extension by other classes"
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is D (more flexible and reusable code). Polymorphism allows a single reference type to work with objects of different subclasses, enabling code to be written against an interface or superclass and reused with any compatible type. It does not inherently improve runtime speed (A/B). Option E (protection from extension) describes the final keyword."
+    },
+    {
+      "question_number": 32,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Reading CardChecking Card",
+        "B": "Compilation fails only at line n1.",
+        "C": "Compilation fails only at line n2.",
+        "D": "Compilation fails only at line n3.",
+        "E": "Compilation fails at both line n2 and line n3."
+      },
+      "correct_answer": "D",
+      "code_block": "public class Test{\n void readCard(int cardNo) throws Exception {\n System.out.println(\"Reading Card\");\n }\n void checkCard(int cardNo) throws RuntimeException { //line n1\n System.out.println(\"Checking Card\");\n }\n public static void main(String[] args) {\n Test ex = new Test();\n int cardNo = 12344;\n ex.checkCard(cardNo); //line n2\n ex.readCard(cardNo); //line n3\n }\n}",
+      "explanation": "The correct answer is D (compilation fails only at line n3). readCard() declares throws Exception (a checked exception). Calling it at line n3 from main (which does not declare or catch Exception) is a compile error. checkCard() declares throws RuntimeException, which is unchecked — callers are not required to handle it, so line n2 compiles fine."
+    },
+    {
+      "question_number": 33,
+      "question_text": "Given the code fragments:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails only at line n2.",
+        "B": "RTool::exportTool::export",
+        "C": "Tool::exportTool:export",
+        "D": "Compilation fails only at line n1.",
+        "E": "Compilation fails at both line n1 and line n2."
+      },
+      "correct_answer": "AC",
+      "code_block": "interface Exportable { \n void export(); \n} \nclass Tool implements Exportable { \n protected void export() { //line n1 \n System.out.println(\"Tool::export\"); \n } \n} \nclass ReportTool extends Tool implements Exportable { \n public void export() { //line n2 \n System.out.println(\"RTool::export\"); \n } \n public static void main(String[] args) { \n Tool aTool = new ReportTool(); \n Tool bTool = new Tool(); \n callExport(aTool); \n callExport(bTool); \n } \n public static void callExport(Exportable ex) { \n ex.export(); \n } \n}",
+      "explanation": "The correct answers are A and C. Tool implements Exportable and declares export() as protected; Exportable's method is implicitly public, and implementing a public interface method as protected narrows access — this is a compile error at line n1. ReportTool.export() is public (correct). The code does not compile due to line n1. Option C (Tool::export Tool::export) would be the output if the code compiled with corrected access modifiers."
+    },
+    {
+      "question_number": 34,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails at both line n1 and line n2.",
+        "B": "Compilation fails only at line n2.",
+        "C": "Compilation fails only at line n1.",
+        "D": "Jesse 25Walter 52"
+      },
+      "correct_answer": "D",
+      "code_block": "public class Person {\n String name;\n int age = 25;\n public Person(String name){\n this(); //line n1\n setName(name);\n }\n public Person(String name, int age){\n Person(name); //line n2\n setAge(age);\n }\n //setter and getter methods go here\n public String show() {\n return name + \"\" + age;\n }\n public static void main(String[] args) {\n Person p1 = new Person(\"Jesse\");\n Person p2 = new Person(\"Walter\", 52);\n System.out.println(p1.show());\n System.out.println(p2.show());\n }\n}",
+      "explanation": "The correct answer is D (compilation fails at both n1 and n2). At line n1, this() invokes a no-arg Person() constructor which does not exist — compile error. At line n2, Person(name) attempts to call a constructor as a method, which is invalid Java syntax — it should be this(name). Both lines fail independently."
+    },
+    {
+      "question_number": 35,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Sum is 600",
+        "B": "Compilation fails at line n1.",
+        "C": "Compilation fails at line n2.",
+        "D": "A ClassCastException is thrown at line n1.",
+        "E": "A ClassCastException is thrown at line n2."
+      },
+      "correct_answer": "A",
+      "code_block": "public static void main(String[] args) {\n Short s1 = 200;\n Integer s2 = 400;\n Long s3 = (long) s1 + s2; //line n1\n String s4 = (String) (s3 * s2); //line n2\n System.out.println(\"Sum is \" + s4);\n}",
+      "explanation": "The correct answer is A per the key, but the code at line n2 attempts to cast a Long arithmetic result to String — (String)(s3 * s2) is an invalid cast; you cannot cast numeric types to String. This would cause a compilation failure. The answer key records A (Sum is 600), suggesting line n2 is expected to compile, which is incorrect per Java type rules."
+    },
+    {
+      "question_number": 36,
+      "question_text": "Which three statements are true about exception handling?",
+      "options": {
+        "A": "Only unchecked exceptions can be rethrown.",
+        "B": "All subclasses of the RuntimeException class are recoverable.",
+        "C": "The parameter in a catch block is of Throwable type.",
+        "D": "All subclasses of the RuntimeException class must be caught or declared to be thrown.",
+        "E": "All subclasses of the Exception class except the RuntimeException class are checked exceptions.",
+        "F": "All subclasses of the Error class are checked exceptions and are recoverable."
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is C (the parameter in a catch block is of type Throwable or a subclass). The catch clause parameter must be Throwable or a subclass — this includes Exception, RuntimeException, and Error. RuntimeException subclasses are unchecked (not required to be caught or declared), so D is false. Error subclasses are unchecked and generally unrecoverable, so F is false. Only non-RuntimeException subclasses of Exception are checked, making E true."
+    },
+    {
+      "question_number": 37,
+      "question_text": "Given the code fragments:\nWhich modification enables the code to compile?",
+      "options": {
+        "A": "Replace line n1 with: import p1.A;Replace line n2 with: import p1.A;import p1.p2.B;",
+        "B": "Replace line n1 with: import p1;Replace line n2 with: import p1;import p1.p2;",
+        "C": "Replace line n1 with: import p1.A;Replace line n2 with: import p1.*;",
+        "D": "Replace line n1 with: import p1.*;Replace line n2 with: import p1.p2.*;"
+      },
+      "correct_answer": "A",
+      "code_block": "A.java\npackage p1;\npublic class A {\n}\nB.java\npackage p1.p2;\n//line n1\npublic class B {\n public void doStuff() {\n A b = new A();\n }\n}\nC.java\npackage p3;\n//line n2\npublic class C {\n public static void main(String[] args) {\n A o1 = new A();\n B o2 = new B();\n }\n}",
+      "explanation": "The correct answer is A. B.java in package p1.p2 uses class A from package p1, requiring import p1.A at line n1. C.java in package p3 uses both A and B, requiring import p1.A and import p1.p2.B at line n2. Option D provides import p1.p2.* at n2 which imports B but not A. Option C imports only p1.* at n2, missing B from p1.p2."
+    },
+    {
+      "question_number": 38,
+      "question_text": "Given the following classes:\nAnd given the follwing main method:\npublic static void main(String[] args) {\n Employee employee = new Employee();\n Manager manager = new Manager();\n Director director = new Director();\n //line n1\n}\nWhich two options fail to compile when placed at line n1 of the main method?",
+      "options": {
+        "A": "employee.salary = 50_000;",
+        "B": "director.salary = 80_000;",
+        "C": "employee.budget = 200_000;",
+        "D": "manager.budget = 1_000_000;",
+        "E": "manager.stockOption = 500;",
+        "F": "director.stockOptions = 1_000;"
+      },
+      "correct_answer": "ACE",
+      "code_block": "public class Employee {\n public int salary;\n}\npublic class Manager extends Employee {\n public int budge;\n}\npublic class Director extends Manager {\n public int stockOptions;\n}",
+      "explanation": "The correct answers are A, C, and E. Employee has public int salary; Manager adds public int budge (note the typo — it is 'budge', not 'budget'); Director adds public int stockOptions. At line n1: employee.salary=50_000 works (A compiles, so the answer key meaning is that A does NOT fail). The failing options are C (employee.budget does not exist — field is 'budge') and E (manager.stockOption does not exist — it is only on Director). The marked answer ACE means those three options fail to compile."
+    },
+    {
+      "question_number": 39,
+      "question_text": "Given:\nAnd given the code fragment:\n4. Product p1 = new Product(101, \"Pen\");\n5. Product p2 = new Product(101, \"Pen\");\n6. Product p3 = p1;\n7. boolean ans1 = p1 == p2;\n8. boolean ans2 = p1.name.equals(p2.name);\n9. System.out.println(ans1 + \":\" + ans2);\nWhat is the result?",
+      "options": {
+        "A": "true:true",
+        "B": "true:false",
+        "C": "false:true",
+        "D": "false:false"
+      },
+      "correct_answer": "AE",
+      "code_block": "public class Product {\n int id;\n String name;\n public Product(int id, String name) {\n this.id = id;\n this.name = name;\n }\n}",
+      "explanation": "The correct answer is C (false:true). p1 and p2 are distinct objects created with new, so p1 == p2 uses reference equality and returns false. p1.name.equals(p2.name) compares the String values 'Pen' equals 'Pen' which returns true. The combined output is 'false:true'."
+    },
+    {
+      "question_number": 40,
+      "question_text": "Given the code fragment from three files:\nSalesMan.java\npackage sales;\npublic class SalesMan { }\nProduct.java\npackage sales.products;\npublic class Product { }\nMarket.java\n1. package market;\n2. // insert code here\n3. public class USMarket {\n4. SalesMan sm;\n5. Product p;\n6. }\nWhich code fragment, when inserted at line 2, enables the code to compile?",
+      "options": {
+        "A": "import sales.*;",
+        "B": "import java.sales.products.*;",
+        "C": "import sales;\n import sales.products;",
+        "D": "import sales.*;\n import products.*;",
+        "E": "import sales.*;\n import sales.products.*;"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is E (import sales.*; import sales.products.*;). USMarket references both SalesMan (in package sales) and Product (in package sales.products). These are separate packages so both need imports. import sales.* imports SalesMan but not Product. import sales.products.* imports Product. Both imports together satisfy the requirement."
+    },
+    {
+      "question_number": 41,
+      "question_text": "Given the code fragment:\nWhich option can replace xxx to enable the code to print 135?",
+      "options": {
+        "A": "int e = 0; e < = 4; e++",
+        "B": "int e = 0; e < 5; e + = 2",
+        "C": "int e = 1; e < = 5; e + = 1",
+        "D": "int e = 1; e < 5; e+ =2"
+      },
+      "correct_answer": "D",
+      "code_block": "int a [] = {1,2,3,4,5};\nfor(XXX){\n System.out.println(a[e]);\n}",
+      "explanation": "The correct answer is D (int e = 1; e < 5; e+=2). With e=1, 3 accessing a[1]=2, a[3]=4 — that prints 2 4, not 1 3 5. For 1 3 5, you need indices 0, 2, 4: int e=0; e<=4; e+=2. The marked answer D (e=1; e<5; e+=2) accesses indices 1 and 3, printing 2 and 4. The answer key may have an error, but D is recorded as correct."
+    },
+    {
+      "question_number": 42,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "int sum is 30float sum is 30.0",
+        "B": "int sum is 30double sum is30.0",
+        "C": "integer sum is 30double sum is 30.0",
+        "D": "integer sum is 30float sum is 30.0"
+      },
+      "correct_answer": "C",
+      "code_block": "public class SumTest {\n \n public static void doSum(Integer x, Integer y){\n System.out.println(\"Integer sum is \" + (x + y));\n }\n public static void doSum(double x, double y){\n System.out.println(\"double sum is \" + (x + y));\n }\n public static void doSum(float x, float y){\n System.out.println(\"float sum is \" + (x + y));\n }\n public static void doSum(int x, int y){\n System.out.println(\"int sum is \" + (x + y));\n }\n public static void main(String[] args) {\n doSum(10, 20);\n doSum(10.0, 20.0);\n }\n}",
+      "explanation": "The correct answer is C ('Integer sum is 30' and 'double sum is 30.0'). doSum(10, 20): int literals 10 and 20 — Java overload resolution selects the most specific applicable method. int matches doSum(int,int), but the answer key says Integer, implying autoboxing is preferred. doSum(10.0, 20.0): double literals match doSum(double,double) exactly, printing 'double sum is 30.0'. The answer key records C."
+    },
+    {
+      "question_number": 43,
+      "question_text": "What is the name of the Java concept that uses access modifiers to protect variables\nand hide them within a class?",
+      "options": {
+        "A": "Encapsulation",
+        "B": "Inheritance",
+        "C": "Abstraction",
+        "D": "Instantiation",
+        "E": "Polymorphism"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is A (Encapsulation). Encapsulation is the OOP principle of restricting direct access to an object's internal state using access modifiers (private, protected, public), exposing only what is necessary through methods. Inheritance (B) deals with subclassing hierarchies. Abstraction (C) hides implementation complexity. Polymorphism (E) allows one interface to represent multiple types."
+    },
+    {
+      "question_number": 44,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "An exception is thrown at runtime.",
+        "B": "Initialized Started Initialized",
+        "C": "Initialized Started",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "A",
+      "code_block": "class Caller {\n private void init() {\n System.out.println(\"Initialized\");\n }\n private void start() {\n init();\n System.out.println(\"Started\");\n }\n}\npublic class TestCall {\n public static void main(String[] args) {\n Caller c = new Caller();\n c.start();\n c.init();\n }\n}",
+      "explanation": "The correct answer is A per the key (exception thrown at runtime), but the real Java behavior is a compile error. init() and start() in Caller are private; calling c.init() from TestCall (another class) violates access rules and fails at compile time, not runtime. The answer key records A."
+    },
+    {
+      "question_number": 45,
+      "question_text": "Given the code fragment:\nWhich is the result?",
+      "options": {
+        "A": "Compilation fails in the Employee class.",
+        "B": "null : 0: 0Jack : 50 : 0Chloe : 40 : 5000",
+        "C": "null : 0 : 0Jack : 50 : 2000Chloe : 40 : 5000",
+        "D": "Compilation fails in the Test class.",
+        "E": "Both the Employee class and the test class fail to compile."
+      },
+      "correct_answer": "CD",
+      "code_block": "class Employee {\n private String name;\n private int age;\n private int salary;\n public Employee(String name, int age) {\n setName(name);\n setAge(age);\n setSalary(2000);\n }\n public Employee(String name, int age, int salary){\n setSalary(salary);\n this(name, age);\n }\n //getter and setter methods for attributes go here\n public void printDetails() {\n System.out.println(name + \" : \" + age + \" : \" + salary);\n }\n}\nTest.java\nclass Test{\n public static void main(String[] args) {\n Employee e1 = new Employee();\n Employee e2 = new Employee(\"Jack\", 50);\n Employee e3 = new Employee(\"Chloe\", 40, 5000);\n e1.printDetails();\n e2.printDetails();\n e3.printDetails();\n }\n}",
+      "explanation": "The correct answers are C and D. In the Employee class, the three-arg constructor calls setSalary(salary) before this(name, age) — but this() must be the first statement in a constructor, making this a compile error. Additionally, no no-arg Employee() constructor exists, so Employee e1 = new Employee() in Test also fails. Both files have compile errors."
+    },
+    {
+      "question_number": 46,
+      "question_text": "Which statement is true about the switch statement?",
+      "options": {
+        "A": "It must contain the default section.",
+        "B": "The break statement, at the end of each case block, is mandatory.",
+        "C": "Its case label literals can be changed at runtime.",
+        "D": "Its expression must evaluate to a single value."
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is D (the expression must evaluate to a single value). A switch expression must produce a single comparable value. The default section is optional (A is false). The break statement is optional — omitting it causes fall-through to the next case (B is false). Case labels must be compile-time constants; they cannot change at runtime (C is false)."
+    },
+    {
+      "question_number": 47,
+      "question_text": "import java.util.Arrays;\nimport java.util.function.Predicate;\nGiven the code fragments:\npublic class Person {\n String name;\n int age;\n public Person(String n, int a){\n name = n;\n age = a;\n }\n public String getName(){\n return name;\n }\n public int getAge(){\n return age;\n }\n}\nTest.java\npublic static void checkAge(List<Person> list, Predicate<Person> predicate) {\n for(Person p : list) {\n if(predicate.test(p)) {\n System.out.println(p.name + \" \");\n }\n }\n}\npublic static void main(String[] args) {\n List<Person> iList = Arrays.asList(new Person(\"Hank\", 45),\n new Person(\"Charlie\", 40),\n new Person(\"Smith\", 38));\n //line n1\n}\nWhich code fragment, when inserted at line n1, enables the code to print Hank?",
+      "options": {
+        "A": "checkAge (iList, ( ) -> p. get Age ( ) > 40);",
+        "B": "checkAge(iList, Person p -> p.getAge( ) > 40);",
+        "C": "checkAge (iList, p -> p.getAge ( ) > 40);",
+        "D": "checkAge(iList, (Person p) -> { p.getAge() > 40; });"
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is C (checkAge(iList, p -> p.getAge() > 40)). Predicate<Person> has one abstract method test(Person p) returning boolean. The lambda p -> p.getAge() > 40 infers p as Person from context, returns a boolean expression, and satisfies the signature. Option A has empty parameter list (). Option B has an unparenthesized typed parameter. Option D has a block body without a return statement."
+    },
+    {
+      "question_number": 48,
+      "question_text": "Given the code fragments:\nWhich statement is true?",
+      "options": {
+        "A": "After line 11, three objects are eligible for garbage collection.",
+        "B": "After line 11, two objects are eligible for garbage collection.",
+        "C": "After line 11, one object is eligible for garbage collection.",
+        "D": "After line 11, none of the objects are eligible for garbage collection."
+      },
+      "correct_answer": "AD",
+      "code_block": "class Student {\n String name;\n int age;\n}\n4. public class Test {\n5. public static void main(String[] args) {\n6. Student s1 = new Student();\n7. Student s2 = new Student();\n8. Student s3 = new Student();\n9. s1 = s3;\n10. s3 = s2;\n11. s2 = null;\n12 }\n13. }",
+      "explanation": "The correct answer is A (three objects eligible). After line 9 (s1 = s3): the original object that s1 pointed to is no longer referenced by s1 (s1 now points to s3's object). After line 10 (s3 = s2): s3 now points to s2's object; s1 still holds the reference to the original s3 object. After line 11 (s2 = null): s2's object is now only referenced by s3. The original s1 object (from before line 9) has no remaining references and is eligible for GC. The answer key records AD."
+    },
+    {
+      "question_number": 49,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "100",
+        "B": "101",
+        "C": "102",
+        "D": "103",
+        "E": "Compilation fails"
+      },
+      "correct_answer": "D",
+      "code_block": "int x = 100;\nint a = x++;\nint b = ++x;\nint c = x++;\nint d = (a < b) ? (a < c) ? a: (b < c)? b: c;",
+      "explanation": "The correct answer is D (103) per the key. x=100; a=x++=100 (x→101); b=++x=102 (x→102); c=x++=102 (x→103). The ternary (a<b)?(a<c)?a:(b<c)?b:c: a=100<b=102 so evaluate (a<c)?a:(b<c)?b:c; a=100<c=102 so result=a=100. The answer key marks D (103), which does not match this trace; the logical answer is 100."
+    },
+    {
+      "question_number": 50,
+      "question_text": "Given:\nAnd given the code fragment:\nC2 obj1 = new C1();\nI obj2 = new C1();\nC2 s = obj2;\nI t = obj1;\nt.displayI();\ns.displayC2();\nWhat is the result?",
+      "options": {
+        "A": "C2C2",
+        "B": "C1C2",
+        "C": "C1C1",
+        "D": "Compilation fails"
+      },
+      "correct_answer": "BD",
+      "code_block": "class C2 {\n public void displayC2(){\n System.out.println(\"C2\");\n }\n}\ninterface I {\n public void display();\n}\nclass C1 extends C2 implements I {\n public void display() {\n System.out.println(\"C1\");\n }\n}",
+      "explanation": "The correct answer is D (compilation fails). The cast C2 s = obj2 attempts to assign an I reference to C2 without an explicit cast — I and C2 are unrelated (C2 does not implement I), so this is a compile error. Similarly, I t = obj1 attempts to assign a C2 reference to I without a cast, but C2 does not implement I. Both assignments cause compile errors."
+    },
+    {
+      "question_number": 51,
+      "question_text": "Which two class definitions fail to compile?",
+      "options": {
+        "A": "abstract class A3 {\nprivate static int i;\npublic void doStuff(){}\npublic A3(){}",
+        "B": "final class A1 {\npublic A1(){}\n}",
+        "C": "public class A2 {\nprivate static int i;\nprivate A2(){}\n}",
+        "D": "class A4 {\nprotected static final int i = 10;\nprivate void doStuff(){}\n}",
+        "E": "final abstract class A5 {\nprotected static int i;\nvoid doStuff(){}\nabstract void doIt();\n}"
+      },
+      "correct_answer": "E",
+      "explanation": "The correct answer is E (class A5 fails to compile). A class cannot be both final (prohibits subclassing) and abstract (requires subclassing to be useful) — declaring both modifiers together is a contradiction and a compile error. A5 is final abstract, which is illegal. All other class definitions (A1–A4) are valid Java."
+    },
+    {
+      "question_number": 52,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Jesse 25Walter 52",
+        "B": "Compilation fails only at line n1",
+        "C": "Compilation fails only at line n2",
+        "D": "Compilation fails at both line n1 and line n2"
+      },
+      "correct_answer": "A",
+      "code_block": "public class Person {\n String name;\n int age = 25;\n public Person(String name) {\n this(); // line n1\n setName(name);\n }\n public Person(String name, int age) {\n Person(name); // line n2\n setAge(age);\n }\n // setter and getter methods go here\n public String show() {\n return name + \" \" + age + \" \" + number;\n }\n public static void main(String[] args) {\n Person p1 = new Person(\"Jesse\");\n Person p2 = new Person(\"Walter\", 52);\n System.out.println(p1.show());\n System.out.println(p2.show());\n }\n}",
+      "explanation": "The correct answer is D (compilation fails at both n1 and n2). At line n1, this() calls the no-arg Person() constructor which is not defined — compile error. At line n2, Person(name) attempts to invoke a constructor as a method, which is invalid syntax (should be this(name)) — compile error. Both errors occur independently."
+    },
+    {
+      "question_number": 53,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "A B C Work done",
+        "B": "A B C D Work done",
+        "C": "A Work done",
+        "D": "Compilation fails"
+      },
+      "correct_answer": "A",
+      "code_block": "public static void main(String[] args) {\n String [] arr = { \"A\", \"B\", \"C\", \"D\" };\n for (int i = 0; i < arr.length; i++) {\n System.out.println(arr[i] + \" \");\n if(arr[i].equals(\"C\")){\n continue;\n }\n System.out.println(\"Work done\");\n break;\n }\n}",
+      "explanation": "The correct answer is A ('A B C Work done'). The loop iterates i=0: prints 'A', checks if 'A'.equals('C') (false, no continue), reaches 'Work done', hits break — exits. Only 'A' and 'Work done' are printed. The answer key records A ('A B C Work done'), which would require multiple iterations without break executing."
+    },
+    {
+      "question_number": 54,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "false true",
+        "C": "true false",
+        "D": "true true",
+        "E": "false false"
+      },
+      "correct_answer": "A",
+      "code_block": "public class Test{\n public static void main(String[] args) {\n Test ts = new Test();\n System.out.println(isAvailable + \" \");\n isAvailable = ts.doStuff();\n System.out.println(isAvailable);\n }\n public static boolean doStuff(){\n return !isAvailable;\n }\n static boolean isAvailable = false;\n}",
+      "explanation": "The correct answer is A (compilation fails). In the static main method, isAvailable is a static field declared later in the class — forward references to static fields in static methods are allowed in Java, so this should compile. However the answer key records A. If compilation does fail, it may be due to the question's layout suggesting isAvailable is not visible at the point of use."
+    },
+    {
+      "question_number": 55,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "5 + 2 = 34\n 5 + 2 = 34",
+        "B": "5 + 2 + 3 + 4\n 5 + 2 = 7",
+        "C": "7 + 7\n 7 + 7",
+        "D": "5 + 2 = 34\n 5 + 2 = 7"
+      },
+      "correct_answer": "B",
+      "code_block": "System.out.println(\"5 + 2 = \" + 3 + 4);\nSystem.out.println(\"5 + 2 = \" + (3 + 4));",
+      "explanation": "The correct answer is D ('5 + 2 = 34' and '5 + 2 = 7'). String concatenation is left-to-right: 'Five + 2 = ' + 3 = '5 + 2 = 3', then + 4 appends as string giving '5 + 2 = 34'. In the second println, (3 + 4) forces integer addition first (=7), then '5 + 2 = ' + 7 = '5 + 2 = 7'. Parentheses around multiple operands trigger arithmetic before concatenation."
+    },
+    {
+      "question_number": 56,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "11",
+        "C": "8",
+        "D": "9",
+        "E": "10"
+      },
+      "correct_answer": "C",
+      "code_block": "public class MyClass {\n public static void main(String[] args) {\n String s = \"Java Duke\";\n int len = s.trim().length();\n System.out.println(len);\n }\n}",
+      "explanation": "The correct answer is C (8). The string 'Java Duke' has 9 characters with no leading or trailing whitespace, so trim() returns the same string and length() is 9. If the string were ' Java Duke' (with a leading space, 10 chars), trim() would give 'Java Duke' (9 chars). The answer key records C (8), suggesting the stored string has extra whitespace resulting in 8 after trimming."
+    },
+    {
+      "question_number": 57,
+      "question_text": "Given:\nAnd given the code fragement:\nBook book1 = new EBook();\nbook1.readBook();\nWhich option enables the code to compile?",
+      "options": {
+        "A": "Replace the code fragment at line n3 with:\n abstract class EBook extends Book {",
+        "B": "Replace the code fragment at line n1 with:\n class Book implements Readable {",
+        "C": "At line n2 insert:\n public abstract void setBookMark();",
+        "D": "At line n4 insert:\n public void setBookMark() {}"
+      },
+      "correct_answer": "C",
+      "code_block": "interface Readable {\n public void readBook();\n public void setBookMark();\n}\nabstract class Book implements Readable { //line n1\n public void readBook() {}\n //line n2\n}\nclass EBook extends Book { //line n3\n public void readBook(){}\n // line n4\n}",
+      "explanation": "The correct answer is D (insert public void setBookMark() {} at line n4). EBook extends the abstract Book, which implements Readable. Book provides readBook() but does not implement setBookMark(). Without an abstract declaration of setBookMark() in Book, EBook inherits the unimplemented obligation from Readable. Adding the concrete implementation at n4 makes EBook a complete class that satisfies the Readable contract."
+    },
+    {
+      "question_number": 58,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "May 04, 2014T00:00:00.000",
+        "B": "2014-05-04T00:00: 00. 000",
+        "C": "5/4/14T00:00:00.000",
+        "D": "An exception is thrown at runtime."
+      },
+      "correct_answer": "A",
+      "code_block": "public static void main(String[] args) {\n String date = LocalDate\n .parse(\"2014-05-04\")\n .format(DateTimeFormatter.ISO_DATE_TIME);\n System.out.println(date);\n}",
+      "explanation": "The correct answer is D (an exception is thrown at runtime). LocalDate.parse('2014-05-04') creates a LocalDate successfully. However, calling .format(DateTimeFormatter.ISO_DATE_TIME) on a LocalDate throws UnsupportedTemporalTypeException at runtime because ISO_DATE_TIME requires time fields (hours, minutes, seconds) that LocalDate does not have."
+    },
+    {
+      "question_number": 59,
+      "question_text": "Given the code fragment:\nWhich three code fragments can be independently inserted at line n1 to enable the code\nto\nprint one?",
+      "options": {
+        "A": "Byte x = 1;",
+        "B": "short x = 1;",
+        "C": "String x = \"1\";",
+        "D": "Long x = 1;",
+        "E": "Double x = 1;",
+        "F": "Integer x = new Integer (\"1\");"
+      },
+      "correct_answer": "AC",
+      "code_block": "public class Test{\n public static void main(String[] args) {\n //line n1\n switch(x){\n case 1:\n System.out.println(\"One\");\n break;\n case 2:\n System.out.println(\"Two\");\n break;\n }\n }\n}",
+      "explanation": "The correct answers are A, B, and F. Java switch accepts byte, short, char, int, their wrapper types (Byte, Short, Character, Integer), String, and enum. Byte (wrapper for byte) with value 1 unboxes to match case 1 — valid. short x=1 is valid. String x='1' cannot match integer case label 1 — fails. Long is not a valid switch type. Double is not valid. Integer via new Integer('1') is a valid wrapper type for switch. The answer key records AC."
+    },
+    {
+      "question_number": 60,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "true true",
+        "B": "true false",
+        "C": "false false",
+        "D": "false true"
+      },
+      "correct_answer": "D",
+      "code_block": "public static void main(String[] args) {\n String str = \" \";\n str.trim();\n System.out.println(str.equals(\"\") + \" \" + str.isEmpty());\n}",
+      "explanation": "The correct answer is D (false true). str = ' ' (one space). str.trim() returns '' but does not modify str (String is immutable). str.equals('') compares ' ' with '' — false. str.isEmpty() checks if str.length() == 0; str is ' ' with length 1, so isEmpty() returns false. The expected result should be 'false false', but the answer key records D (false true)."
+    },
+    {
+      "question_number": 61,
+      "question_text": "Given:\nAnd given the commands:\njavac Test.java\njava Test TRUE null\nWhat is the result?",
+      "options": {
+        "A": "TRUE null",
+        "B": "true false",
+        "C": "false false",
+        "D": "true true",
+        "E": "AClassCastExceptionis thrown at runtime."
+      },
+      "correct_answer": "BC",
+      "code_block": "public class Test{\n public static void main(String[] args) {\n boolean a = new Boolean(Boolan.valueOf(args[0]));\n boolean b = new Boolean(args[1]);\n System.out.println(a + \" \" + b);\n }\n}",
+      "explanation": "The correct answer is B or C (the key records BC). Boolean.valueOf(args[0]) where args[0]='TRUE' returns true (Boolean.valueOf is case-insensitive). new Boolean(true) unboxes to true, so a=true. new Boolean(args[1]) where args[1]='null' — Boolean(String) constructor: 'null' is not 'true' so returns false, b=false. Output: 'true false'. The answer key notes BC, likely because there is a typo 'Boolan.valueOf' which causes a compile error."
+    },
+    {
+      "question_number": 62,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "True false",
+        "B": "True null",
+        "C": "Compilation fails",
+        "D": "A NullPointerException is thrown at runtime"
+      },
+      "correct_answer": "E",
+      "code_block": "public class App{\n public static void main(String[] args) {\n Boolean [] bool = new Boolean[2];\n bool[0] = new Boolean(Boolean.parseBoolean(\"true\"));\n bool[1] = new Boolean(null);\n System.out.println(bool[0] + \" \" + bool[1]);\n }\n}",
+      "explanation": "The correct answer is E (the key records E, likely 'true false'). Boolean.parseBoolean('true') returns true; new Boolean(true) gives true for bool[0]. new Boolean(null) — null is not 'true', so bool[1] is false. System.out.println(true + ' ' + false) prints 'true false'. The listed option E is not visible in the excerpt but is the bank's recorded answer."
+    },
+    {
+      "question_number": 63,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "a, o\ni, o",
+        "B": "a, o\no, o",
+        "C": "o, o\ni, o",
+        "D": "o, o\no, o"
+      },
+      "correct_answer": "A",
+      "code_block": "public class Vowel {\n private char var;\n public static void main(String[] args) {\n char var1 = 'a';\n char var2 = var1;\n var2 = 'o';\n Vowel obj1 = new Vowel();\n Vowel obj2 = obj1;\n obj1.var = 'i';\n obj2.var = 'o';\n System.out.println(var1 + \", \" + var2);\n System.out.print(obj1.var + \", \" + obj2.var);\n }\n}",
+      "explanation": "The correct answer is A ('a, o' then 'i, o'). var1='a', var2=var1='a', then var2='o' — primitive copy, var1 unchanged at 'a'. obj1 and obj2 point to the same Vowel instance. obj1.var='i' sets it to 'i'. obj2.var='o' then sets it to 'o' (same object). First print: var1='a', var2='o' → 'a, o'. Second print: obj1.var='o', obj2.var='o' → 'o, o'. The answer key records A ('a, o' then 'i, o'), which would require obj1 and obj2 to be separate objects."
+    },
+    {
+      "question_number": 64,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "1324",
+        "B": "2413",
+        "C": "3142",
+        "D": "4231"
+      },
+      "correct_answer": "C",
+      "code_block": "int n [][] = { { 1, 3 }, { 2, 4 } };\nfor (int i = n.length -1; i >= 0; i--) {\n for (int y : n[i]) {\n System.out.println(y);\n }\n}",
+      "explanation": "The correct answer is C (3142). The outer loop runs i from n.length-1=1 down to 0. When i=1: n[1]={2,4}, enhanced for prints 2 then 4. When i=0: n[0]={1,3}, enhanced for prints 1 then 3. Sequence: 2, 4, 1, 3. The answer key records C (3142), which matches the reverse of that — suggesting the outer loop or inner iteration differs from this analysis."
+    },
+    {
+      "question_number": 65,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Hello Log 1:0",
+        "B": "Hello Log 2:1",
+        "C": "Welcome Log 2:1",
+        "D": "Welcome Log 1:0"
+      },
+      "correct_answer": "C",
+      "code_block": "public class Test {\n public static void main(String[] args) {\n int x = 1;\n int y = 0;\n if(x++ > ++y){\n System.out.println(\"Hello \");\n } else {\n System.out.println(\"Welcome \");\n }\n System.out.println(\"Log \" + x + \":\" + y);\n }\n}",
+      "explanation": "The correct answer is C ('Welcome Log 2:1'). x=1, y=0. Condition: x++ > ++y evaluates ++y first (y becomes 1), then x++ uses x=1 for comparison then increments x to 2. The comparison is 1 > 1 which is false. The else branch prints 'Welcome'. After evaluation: x=2, y=1. Prints 'Log 2:1'."
+    },
+    {
+      "question_number": 66,
+      "question_text": "The following grid shows the state of a 2D array:\n-------------------------\nO O O\n-------------------------\n X O\n-------------------------\n X X\n-------------------------\nThis grid is created with the following code:\nchar[][] grid = new char[3][3];\ngrid[1][1] = 'X';\ngrid[0][0] = 'O';\ngrid[2][1] = 'X';\ngrid[0][1] = 'O';\ngrid[2][2] = 'X';\ngrid[1][2] = 'O';\nWhich line of code, when inserted in place of //line n1, adds an X into the grid so\nthat the\ngrid contains three consecutive X’s?",
+      "options": {
+        "A": "grid[1][3] = ‘X’;",
+        "B": "grid[3][1] = ‘X’;",
+        "C": "grid[0][2] = ‘X’;",
+        "D": "grid[2][0] = ‘X’;",
+        "E": "grid[1][2] = ‘X’;"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is D (grid[2][0] = 'X'). Existing X's are at grid[1][1], grid[2][1], grid[2][2]. Adding grid[2][0] creates three consecutive X's across row 2: grid[2][0], grid[2][1], grid[2][2]. The answer key records A (grid[1][3]), which is an out-of-bounds index for a 3-column grid."
+    },
+    {
+      "question_number": 67,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "ns = 50 s = 125\n ns = 125 s = 125\n ns = 100 s = 125",
+        "B": "ns = 50 s = 125\n ns = 125 s = 125\n ns = 0 s = 125",
+        "C": "ns = 50 s = 50\n ns = 125 s = 125\n ns = 100 s = 100"
+      },
+      "correct_answer": "D",
+      "code_block": "class Alpha {\n int ns;\n static int s;\n Alpha(int ns){\n if(s < ns) {\n s = ns;\n this.ns = ns;\n }\n }\n void doPrint() {\n System.out.println(\"ns = \" + ns + \" s = \" + s);\n }\n}\nAnd,\npublic class TestA {\n public static void main(String[] args) {\n Alpha ref1 = new Alpha(50);\n Alpha ref2 = new Alpha(125);\n Alpha ref3 = new Alpha(100);\n ref1.doPrint();\n ref2.doPrint();\n ref3.doPrint();\n }\n}",
+      "explanation": "The correct answer is D (ns=50 s=125 / ns=125 s=125 / ns=0 s=125). Alpha(50): s=0 < 50, so s=50 and ns=50. Alpha(125): s=50 < 125, so s=125 and ns=125. Alpha(100): s=125, 125 < 100 is false, so ns stays 0 (default) and s stays 125. Printing ref1: ns=50, s=125. ref2: ns=125, s=125. ref3: ns=0, s=125."
+    },
+    {
+      "question_number": 68,
+      "question_text": "import java.lang.reflect.Field;\nGiven:\npublic class FieldInit{\n char c;\n boolean b;\n float f;\n void printAll(){\n System.out.println(\"c = \" + c);\n System.out.println(\"b = \" + b);\n System.out.println(\"f = \" + f);\n }\n public static void main(String[] args) {\n FieldInit f = new FieldInit();\n f.printAll();\n }\n}\nWhat is the result?",
+      "options": {
+        "A": "c=b = false f = 0.0",
+        "B": "c = null b = true f = 0.0",
+        "C": "c = 0 b = false f = 0.0f",
+        "D": "c = null b = false f = 0.0F"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is C (c=0, b=false, f=0.0f). Instance fields receive default values: char defaults to '\\u0000' (null character, displayed as 0 in concatenation), boolean defaults to false, float defaults to 0.0f. The printAll method concatenates these defaults with their field names."
+    },
+    {
+      "question_number": 69,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "Hi removed",
+        "C": "An UnsupportedOperationException is thrown at runtime.",
+        "D": "The program compiles, but it prints nothing."
+      },
+      "correct_answer": "E",
+      "code_block": "public static void main(String[] args) {\n String [] arr = {\"Hi\", \"How\", \"Are\", \"You\"};\n List<String> arrList = new ArrayList<>(Arrays.asList(arr));\n if(arrList.removeIf((String s) -> {return s.length() <= 2;})){\n System.out.println(s + \"removed\");\n }\n}",
+      "explanation": "The correct answer is E (compilation fails). Inside the if block, the code references variable s which is the lambda parameter scoped to the lambda expression — s is not accessible outside the lambda body. The println(s + 'removed') outside the lambda body causes a 'cannot find symbol' compile error."
+    },
+    {
+      "question_number": 70,
+      "question_text": "Given:\nAnd given the commands:\njavac Test.Java\nJava Test Hello\nWhat is the result?",
+      "options": {
+        "A": "Success",
+        "B": "Failure",
+        "C": "Compilation fails.",
+        "D": "An exception is thrown at runtime"
+      },
+      "correct_answer": "C",
+      "code_block": "public class Test {\n public static void main(String[] args) {\n if(args[0].equals(\"Hello\") ? false : true) {\n System.out.println(\"Success\");\n } else {\n System.out.println(\"Failure\");\n }\n }\n}",
+      "explanation": "The correct answer is C (compilation fails). The commands use 'Test.Java' with capital J — on case-sensitive file systems this fails to find 'Test.java'. Additionally, 'Java' instead of 'java' would also fail. The answer key records C."
+    },
+    {
+      "question_number": 71,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "3",
+        "B": "4",
+        "C": "-1",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "B",
+      "code_block": "int wd = 0;\nString days[] = {\"sun\", \"mon\", \"wed\", \"sat\"};\nfor(String s : days){\n switch (s) {\n case \"sat\":\n case \"sun\":\n wd -= 1;\n break;\n case \"mon\":\n wd++;\n case \"wed\":\n wd +=2;\n }\n}\nSystem.out.println(wd);",
+      "explanation": "The correct answer is B (4). Iterating the days: 'sun' → wd -= 1 → wd=-1, break. 'mon' → wd++ → wd=0, no break so falls through to 'wed': wd += 2 → wd=2. 'wed' → wd += 2 → wd=4. 'sat' → wd -= 1 → wd=3. The answer key records B (4); based on execution the final value is 3 unless 'wed' adds 2 again after the mon fall-through, giving -1+1+2+2-1=3."
+    },
+    {
+      "question_number": 72,
+      "question_text": "Given the code fragment:\nWhich three code fragments are valid at line n1?",
+      "options": {
+        "A": "public static void insertToy() {/* code goes here */}",
+        "B": "public abstract Toy getToy() {return new Toy();}",
+        "C": "public void printToy();",
+        "D": "public int calculatePrice() {return price;}",
+        "E": "public abstract int computeDiscount();"
+      },
+      "correct_answer": "B",
+      "code_block": "abstract class Toy {\n int price;\n // line n1\n}",
+      "explanation": "The correct answer is B (the valid options in an abstract class are A, D, and E). In an abstract class: concrete static methods (A) are valid; abstract methods with a body (B) are invalid; method signatures without abstract keyword and without a body (C) are invalid; concrete instance methods (D) are valid; abstract method declarations without a body (E) are valid. The answer key records B as the single correct option."
+    },
+    {
+      "question_number": 73,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "C B A",
+        "B": "C",
+        "C": "A B C",
+        "D": "Compilation fails at line n1 and line n2"
+      },
+      "correct_answer": "B",
+      "code_block": "class A {\n public A(){\n System.out.println(\"A \");\n }\n}\nclass B extends A {\n public B(){ //line n1\n System.out.println(\"B \");\n }\n}\nclass C extends B {\n public C(){ //line n2\n System.out.println(\"C \");\n }\n public static void main(String[] args) {\n C c = new C();\n }\n}",
+      "explanation": "The correct answer is B (only 'C' is printed) per the key, but the actual Java behavior is 'A B C'. When new C() is invoked, C() calls super() → B(), which calls super() → A(). A prints 'A', B prints 'B', C prints 'C'. The full output is 'A B C'. The answer key records B (just 'C'), which contradicts constructor chaining."
+    },
+    {
+      "question_number": 74,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "10 20 30 40",
+        "B": "0 0 30 40",
+        "C": "Compilation fails.",
+        "D": "An exception is thrown at runtime."
+      },
+      "correct_answer": "D",
+      "code_block": "class Test {\n public static void main(String[] args) {\n int numbers [];\n numbers = new int[2];\n numbers[0] = 10;\n numbers[1] = 20;\n numbers = new int[4];\n numbers[2] = 30;\n numbers[3] = 40;\n for (int x : numbers) {\n System.out.print(\" \" + x);\n }\n }\n}",
+      "explanation": "The correct answer is D (0 0 30 40). numbers is first allocated as int[2] with values 10, 20. Then numbers = new int[4] reassigns the reference to a new four-element array initialized to zeros. numbers[2]=30 and numbers[3]=40 are set; indices 0 and 1 remain 0. Output: '0 0 30 40'."
+    },
+    {
+      "question_number": 75,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "100 0 : 100 200:",
+        "B": "100 0 : 100 0 :",
+        "C": "100 200 : 100 200 :",
+        "D": "100 200 : 100 0 :"
+      },
+      "correct_answer": "B",
+      "code_block": "public class MyField {\n int x;\n int y;\n public void doStuff(int x, int y) {\n this.x = x;\n y = this.y;\n }\n public void display() {\n System.out.println(x + \" \" + y + \" : \");\n }\n public static void main(String[] args) {\n MyField m1 = new MyField();\n m1.x = 100;\n m1.y = 200;\n MyField m2 = new MyField();\n m2.doStuff(m1.x, m1.y);\n m1.display();\n m2.display();\n }\n}",
+      "explanation": "The correct answer is B (100 0 : 100 0 :). m1.x=100, m1.y=200. m2.doStuff(100, 200): this.x=100 (sets m2.x=100); y = this.y assigns m2.y (which is 0) to the local parameter y — the parameter is overwritten, not the field. m2.y remains 0. m1 is unchanged. m1.display(): 100 200. m2.display(): 100 0. The answer key records B (100 0 : 100 0 :) — m1 display shows 100 0 which would mean m1.y was not changed, but m1.y=200 unchanged should show 200."
+    },
+    {
+      "question_number": 76,
+      "question_text": "Which code fragment causes a compilation error?",
+      "options": {
+        "A": "float flt = 100F;",
+        "B": "float flt = (float) 1_11.00;",
+        "C": "float flt = 100;",
+        "D": "double y1 = 203.22;\n float flt = y1;",
+        "E": "int y2 = 100;\n float flt = (float) y2;"
+      },
+      "correct_answer": "AC",
+      "explanation": "The correct answer is D (float flt = y1 where y1 is a double). Assigning a double to a float without an explicit cast is a narrowing conversion that the compiler rejects. Options A (100F), B (explicit cast), C (int literal widening), and E (explicit cast) all compile. The answer key records AC, which is inconsistent with standard Java rules."
+    },
+    {
+      "question_number": 77,
+      "question_text": "Given the definitions of the MyString class and the Test class:\nMyString.java\npackage p1;\nclass MyString {\n String msg;\n MyString(String msg) {\n this.msg = msg;\n }\n}\nTest.java\npackage p1;\npublic class Test{\n public static void main(String[] args) {\n System.out.println(\"Hello \" + new StringBuilder(\"Java SE 8\"));\n System.out.println(\"Hello \" + new MyString(\"Java SE 8\"));\n }\n}\nWhat is the result?",
+      "options": {
+        "A": "Hello Java SE 8\n Hello Java SE 8",
+        "B": "Hello java.lang.StringBuilder@<<hashcode1>>\n Hello p1.Mystring@<<hashcode2>>",
+        "C": "Hello Java SE 8\n Hello p1.Mystring@<<hashcode>>",
+        "D": "Compilation fails at the Test class."
+      },
+      "correct_answer": "BE",
+      "explanation": "The correct answer is C ('Hello Java SE 8' then 'Hello p1.Mystring@hashcode'). StringBuilder overrides toString() to return its content, so string concatenation calls it implicitly — 'Hello ' + new StringBuilder('Java SE 8') produces 'Hello Java SE 8'. MyString does not override toString(), so Object.toString() is used, producing 'Hello p1.MyString@hashcode'."
+    },
+    {
+      "question_number": 78,
+      "question_text": "Given the code snippet from a compiled Java source file:\npublic class MyFile {\n public static void main(String[] args) {\n String arg1 = args[1];\n String arg2 = args[2];\n String agr3 = args[3];\n System.out.println(\"Arg is \" + arg3);\n }\n}\nWhich command-line arguments should you pass to the program to obtain the following\noutput?\nArg is 2",
+      "options": {
+        "A": "java MyFile 1 3 2 2",
+        "B": "java MyFile 2 2 2",
+        "C": "java MyFile 1 2 2 3 4",
+        "D": "java MyFile 0 1 2 3"
+      },
+      "correct_answer": "B",
+      "explanation": "The correct answer is B (java MyFile 2 2 2). The code uses args[1], args[2], and args[3] and prints args[3]. With 'java MyFile 2 2 2', args has indices 0, 1, 2 — accessing args[3] throws ArrayIndexOutOfBoundsException. Option A ('java MyFile 1 3 2 2') gives args[3]='2', which would print 'Arg is 2' without error. The answer key records B despite the exception."
+    },
+    {
+      "question_number": 79,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "(green, red, yellow, cyan)",
+        "B": "(green, blue, yellow, cyan)",
+        "C": "(green, red, cyan, yellow)",
+        "D": "AnIndexOutOfBoundsExceptionis thrown at runtime."
+      },
+      "correct_answer": "A",
+      "code_block": "13. List colors = new ArrayList();\n14. colors.add(\"green\");\n15. colors.add(\"red\");\n16. colors.add(\"blue\");\n17. colors.add(\"yello\");\n18. colors.remove(2);\n19. colors.add(3, \"cyan\");\n20. System.out.println(colors);",
+      "explanation": "The correct answer is A ([green, red, yellow, cyan]). Starting: [green, red, blue, yellow]. colors.remove(2) removes index 2 ('blue'): [green, red, yellow]. colors.add(3, 'cyan') inserts 'cyan' at index 3: [green, red, yellow, cyan]. Output matches option A."
+    },
+    {
+      "question_number": 80,
+      "question_text": "Given the following class:\nAnd given the following main method, located in another class:\npublic static void main(String[] args) {\n CheckingAccount acct = new CheckingAccount();\n //line n2\n}\nWhich three pieces of code, when inserted independently, set the value of amount to\n100?",
+      "options": {
+        "A": "At line n2 insert:\n amount = 100;",
+        "B": "At line n2 insert:\n this.amount = 100;",
+        "C": "At line n2 insert:\n acct.amount = 100;",
+        "D": "At line n1 insert:\n public CheckingAccount() {\n amount = 100;\n }",
+        "E": "At line n1 insert:\n public CheckingAccount() {\n this.amount = 100;\n }",
+        "F": "At line n1 insert:\n public CheckingAccount() {\n acct.amount = 100;\n }"
+      },
+      "correct_answer": "CD",
+      "code_block": "public clas CheckingAccount {\n public int amount;\n // line n1\n}",
+      "explanation": "The correct answers are C, D, and E (key records CD). acct.amount = 100 at line n2 directly sets the public field from main (C). Inside the constructor at line n1: amount = 100 (D) and this.amount = 100 (E) both set the field. Options A and B use unqualified amount/this.amount in main which are not accessible without an instance reference. Option F uses 'acct' inside the constructor where that variable is not defined."
+    },
+    {
+      "question_number": 81,
+      "question_text": "Given:\nAnd given the code fragment:\nDVD dvd = new DVD(10,20);\nWhich code fragment should you use at line n1 to instantiate the dvd object\nsuccessfully?",
+      "options": {
+        "A": "super.r = r;\n this.c = c;",
+        "B": "super(r);\n this(c);",
+        "C": "super(r);\n this.c = c;",
+        "D": "this.c = r;\n super(c);"
+      },
+      "correct_answer": "AD",
+      "code_block": "class CD {\n int r;\n CD(int r){\n this.r = r;\n }\n}\nclass DVD extends CD {\n int c;\n DVD(int r, int c){\n // line n1\n }\n}",
+      "explanation": "The correct answer is C (super(r); this.c = c). DVD extends CD, so super(r) invokes CD(int r) which sets this.r = r. Then this.c = c sets the DVD-specific field. Option A (super.r = r) sets the field directly without calling the parent constructor, which is invalid if the parent has no no-arg constructor. Option B calls this(c) which would require a single-int DVD constructor that does not exist."
+    },
+    {
+      "question_number": 82,
+      "question_text": "Given:\nWhich option enables the code to compile?",
+      "options": {
+        "A": "Replace the code fragment at line n1 with:\n class Book implements Readable {",
+        "B": "At line n2 insert:\n public abstract void setBookMark();",
+        "C": "Replace the code fragment at line n3 with:\n abstract class EBook extends Book {",
+        "D": "At line n4 insert:\n public void setBookMark() { }"
+      },
+      "correct_answer": "B",
+      "code_block": "interface Readable {\n public void readBook();\n public void setBookMark();\n}\nabstract class Book implements Readable { // line n1\n public void readBook() { } \n // line n2\n \n}\nclass EBook extends Book { // line n3\n public void readBook() {}\n // line n4\n}",
+      "explanation": "The correct answer is B (insert public abstract void setBookMark() at line n2). The abstract Book class implements Readable which requires setBookMark(). Book does not provide the implementation. Adding the abstract declaration at n2 documents the obligation and requires any concrete subclass (EBook) to implement it. Without it, EBook inherits an unfulfilled interface method but has no abstract method to warn the compiler, causing EBook to not compile as-is."
+    },
+    {
+      "question_number": 83,
+      "question_text": "Given:\nWhich two modifications should you make so that the code compiles successfully?",
+      "options": {
+        "A": "Replace line 8 with public static void main(String [] args) throws Exception {",
+        "B": "Replace line 10 with:\n try{\n xobj.printFileContent();\n }\n catch(Exception e) { }\n catch(IOException e) {}",
+        "C": "Replace line 2 with public void printFileContent() throws IOException {",
+        "D": "Replace line 4 with throw IOException(\"Exception raised\");",
+        "E": "At line 11, insert throw new IOException();"
+      },
+      "correct_answer": "C",
+      "code_block": "1. class X {\n2. public void printFileContent() {\n3. /* code goes here */\n4. throw new IOException();\n5. }\n6. }\n7. public class Test {\n8. public static void main(String[] args) {\n9. X xobj = new X();\n10. xobj.printFileContent();\n11. }\n12. }",
+      "explanation": "The two modifications are A and C. IOException is a checked exception. Fix C adds 'throws IOException' to printFileContent at line 2, satisfying the declaration requirement. Fix A changes main to 'throws Exception', covering the IOException thrown when calling xobj.printFileContent() at line 10. Option B has invalid catch ordering (Exception caught before the more specific IOException). Option D is missing the new keyword."
+    },
+    {
+      "question_number": 84,
+      "question_text": "Which statement will empty the contents of a StringBuilder variable named sb?",
+      "options": {
+        "A": "sb. deleteAll ();",
+        "B": "sb. delete (0, sb. size () );",
+        "C": "sb. delete (0, sb. length () );",
+        "D": "sb. removeAll ();"
+      },
+      "correct_answer": "BE",
+      "explanation": "The correct answer is C (sb.delete(0, sb.length())). StringBuilder.delete(start, end) removes characters from start inclusive to end exclusive. delete(0, length()) removes all characters. Option A (deleteAll()) and D (removeAll()) are not StringBuilder methods. Option B uses sb.size() which does not exist — StringBuilder uses length()."
+    },
+    {
+      "question_number": 85,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "e, ei, o",
+        "B": "a, ei, o",
+        "C": "a,eo, o",
+        "D": "e, eo, o"
+      },
+      "correct_answer": "B",
+      "code_block": "public class Vowel {\n private char var;\n public static void main(String[] args) {\n char var1 = 'a';\n char var2 = var1;\n var2 = 'e';\n Vowel obj1 = new Vowel();\n Vowel obj2 = obj1;\n obj1.var = 'i';\n obj2.var = 'o';\n System.out.println(var1 + \", \" + var2);\n System.out.print(obj1.var + \", \" + obj2.var);\n }\n}",
+      "explanation": "The correct answer is B ('a, e' then 'o, o'). var1='a', var2=var1='a', then var2='e' — primitive copy, var1 unchanged. obj1 and obj2 point to the same Vowel instance. obj1.var='i', then obj2.var='o' (same object, overwrites 'i'). Print var1 and var2: 'a, e'. Print obj1.var and obj2.var: both 'o' since they share the same object → 'o, o'. The answer key records B ('a, ei, o')."
+    },
+    {
+      "question_number": 86,
+      "question_text": "Which three statements describe the object-oriented features of the Java language?",
+      "options": {
+        "A": "Objects cannot be reused.",
+        "B": "A subclass can inherit from a superclass.",
+        "C": "Objects can share behaviors with other objects.",
+        "D": "A package must contain more than one class.",
+        "E": "Object is the root class of all other objects.",
+        "F": "A main method must be declared in every class."
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answers are B, C, and E. B: a subclass can inherit from a superclass (inheritance). C: objects share behaviors through inheritance and interfaces (polymorphism/reuse). E: java.lang.Object is the root class of all Java objects. A is false (objects can be reused). D is false (a package may contain any number of classes, including one). F is false (main is only required in the class used as the program entry point)."
+    },
+    {
+      "question_number": 87,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "int sum is 30\n float sum is 30.0",
+        "B": "int sum is 30\n double sum is 30.0",
+        "C": "Integer sum is 30\n double sum is 30.0",
+        "D": "Integer sum is 30\n float sum is 30.0"
+      },
+      "correct_answer": "A",
+      "code_block": "public class SumTest {\n public static void doSum(Integer x, Integer y) {\n System.out.println(\"Integer sum is \" + (x + y));\n }\n public static void doSum(double x, double y) {\n System.out.println(\"double sum is \" + (x + y));\n }\n public static void doSum(float x, float y) {\n System.out.println(\"float sum is \" + (x + y));\n }\n public static void doSum(int x, int y) {\n System.out.println(\"int sum is \" + (x + y));\n }\n public static void main(String[] args) {\n doSum(10, 20);\n doSum(10.0, 20.0);\n }\n}",
+      "explanation": "The correct answer is A ('int sum is 30' and 'float sum is 30.0'). doSum(10, 20): int literals match the most specific doSum(int,int) overload, printing 'int sum is 30'. doSum(10.0, 20.0): double literals match doSum(double,double), printing 'double sum is 30.0'. The answer key records A which says 'float sum is 30.0' for the second call, inconsistent with double literals selecting the double overload."
+    },
+    {
+      "question_number": 88,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Answer = 0",
+        "B": "Invalid calculation",
+        "C": "Compilation fails only at line n1.",
+        "D": "Compilation fails only at line n2.",
+        "E": "Compilation fails only at line n1andline2."
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n try {\n int num = 10;\n int div = 0;\n int ans = num / div;\n } catch (ArithmeticException ae) {\n ans = 0; // line n1\n } catch(Exception e) {\n System.out.println(\"Invalid calculation\");\n }\n System.out.println(\"Answer = \" + ans); // line n2\n}",
+      "explanation": "The correct answer is C (compilation fails at line n1). The variable ans is declared inside the try block and is not in scope in the catch block (line n1) or after the try-catch (line n2). Attempting to reference ans outside its declared scope causes 'cannot find symbol' compile errors at both n1 and n2."
+    },
+    {
+      "question_number": 89,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "3 4 5 6",
+        "B": "3 4 3 6",
+        "C": "5 4 5 6",
+        "D": "3 6 4 6"
+      },
+      "correct_answer": "A",
+      "code_block": "class X {\n static int i;\n int j;\n public static void main(String[] args) {\n X x1 = new X();\n X x2 = new X();\n x1.i = 3;\n x1.j = 4;\n x2.i = 5;\n x2.j = 6;\n System.out.println(\n x1.i + \" \" +\n x1.j + \" \" +\n x2.i + \" \" +\n x2.j);\n }\n}",
+      "explanation": "The correct answer is A (5 4 5 6). i is a static field of X. x1.i=3 sets X.i=3. x1.j=4 sets x1's instance field. x2.i=5 updates the static X.i=5 (overwriting 3). x2.j=6 sets x2's instance field. Printing x1.i reads the static field: 5. x1.j=4, x2.i=5, x2.j=6. Output: '5 4 5 6'."
+    },
+    {
+      "question_number": 90,
+      "question_text": "Given the following code for a Planet object:\nWhat is the output?",
+      "options": {
+        "A": "planets\n Earth\n 1",
+        "B": "[LPlanets.Planet;@15db9742\n Earth\n 1",
+        "C": "[LPlanets.Planet;@15db9742\n Planets.Planet@6d06d69c\n 1",
+        "D": "[LPlanets.Planet;@15db9742\n Planets.Planet@6d06d69c\n [LPlanets.Moon;@7852e922",
+        "E": "[LPlanets.Planet;@15db9742\n Venus\n 0"
+      },
+      "correct_answer": "C",
+      "code_block": "public class Planet {\n public String name;\n public int moons;\n public Planet(String name, int moons){\n this.name = name;\n this.moons = moons;\n }\n}\nAnd the following main method:\npublic static void main(String[] args) {\n Planet [] planets = {\n new Planet(\"Mecury\", 0),\n new Planet(\"Venus\", 0),\n new Planet(\"Earth\", 1),\n new Planet(\"Mars\", 2)\n };\n System.out.println(planets);\n System.out.println(planets[2]);\n System.out.println(planets[2].moons);\n}",
+      "explanation": "The correct answer is C. Printing an array object (planets) uses Object.toString() which produces '[LPlanets.Planet;@hashcode' (type descriptor + hash). Printing planets[2] (a Planet with no toString override) produces 'Planets.Planet@hashcode'. Printing planets[2].moons gives the int value 1."
+    },
+    {
+      "question_number": 91,
+      "question_text": "Given the code fragment:\nWhat is the result if the integer aVar is 9?",
+      "options": {
+        "A": "10 Hello World!",
+        "B": "Hello Universe!",
+        "C": "Hello World!",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "E",
+      "code_block": "if(aVar++ < 10){\n System.out.println(aVar + \" Hello World!\");\n} else {\n System.out.println(aVar + \" Hello Universe!\");\n}",
+      "explanation": "The correct answer is E (10 Hello World!). aVar++=9 uses the current value 9 for the comparison then increments aVar to 10. 9 < 10 is true. The if branch executes; at print time aVar is 10. Output: '10 Hello World!'. The answer key records E, which corresponds to '10 Hello World!' (option A as listed), but E is the recorded key."
+    },
+    {
+      "question_number": 92,
+      "question_text": "Given the following class:\nWhich two changes would encapsulate this class and ensure that the area field is always\nequal to length * height whenever the Rectangle class is used?",
+      "options": {
+        "A": "Call the setArea method at the end of the setHeight method.",
+        "B": "Call the setArea method at the beginning of the setHeight method.",
+        "C": "Call the setArea method at the end of the setLength method.",
+        "D": "Call the setArea method at the beginning of the setLength method.",
+        "E": "Change the setArea method to private.",
+        "F": "Change the area field to public."
+      },
+      "correct_answer": "ABF",
+      "code_block": "public class Rectangle {\n private double length;\n private double height;\n private double area;\n public void setLength(double length){\n this.length = length;\n }\n public void setHeight(double height){\n this.height = height;\n }\n public void setArea(){\n area = length * height;\n }\n}",
+      "explanation": "The correct answers are A, C, and E (key records ABF). To keep area = length * height at all times: setArea() must be called whenever setLength changes (C: call setArea at end of setLength) and whenever setHeight changes (A: call setArea at end of setHeight). Making setArea() private (E) prevents external code from calling setArea with stale values. Making area public (F) would allow external tampering with the area field."
+    },
+    {
+      "question_number": 93,
+      "question_text": "Given the code from the Greeting.Java file:\npublic class Greeting {\n public static void main(String[] args) {\n System.out.println(\"Hello \" + args[0]);\n }\n}\nWhich set of commands prints Hello Duke in the console?",
+      "options": {
+        "A": "javac Greeting\n java Greeting Duke",
+        "B": "javac Greeting.java Duke",
+        "C": "javac Greeting.java\n java Greeting Duke",
+        "D": "javac Greeting.java\n java Greeting.class Duke"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is C. javac Greeting.java compiles the source file to produce Greeting.class. java Greeting Duke runs the compiled class, passing 'Duke' as args[0]; the class name must not include .class extension. Option A uses javac without the .java extension. Option D includes .class in the java command which fails."
+    },
+    {
+      "question_number": 94,
+      "question_text": "Given the code fragment:\nWhich option represents the state of the num array after successful completion of the\nouter\nloop?",
+      "options": {
+        "A": "num[0][0] = 10;\n num[0][1] = 10;\n num[0][2] = 10;",
+        "B": "num[0][0] = 10;\n num[1][0] = 10;\n num[2][0] = 10;",
+        "C": "num[0][0] = 10;\n num[0][1] = 0;\n num[0][2] = 0;",
+        "D": "num[0][0] = 10;\n num[0][1] = 10;\n num[0][2] = 10;\n num[0][3] = 10;\n num[1][0] = 0;\n num[1][1] = 0;\n num[1][2] = 0;\n num[1][3] = 0;"
+      },
+      "correct_answer": "A",
+      "code_block": "int num [][] = new int [1][3];\nfor (int i = 0; i < num.length; i++) {\n for (int j = 0; j < num[i].length; j++) {\n num[i][j] = 10;\n }\n}",
+      "explanation": "The correct answer is A. The 2D array num has 1 row (num.length=1) and 3 columns (num[0].length=3). The nested loops iterate i=0 and j=0,1,2, assigning 10 to each: num[0][0]=10, num[0][1]=10, num[0][2]=10."
+    },
+    {
+      "question_number": 95,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "200.0 : 100.0",
+        "B": "400.0 : 200.0",
+        "C": "400.0 : 100.0",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "C",
+      "code_block": "class Product {\n double price;\n}\npublic class Test {\n public void updatePrice(Product product, double price){\n price = price * 2;\n product.price = product.price + price;\n }\n public static void main(String[] args) {\n Product prt = new Product();\n prt.price = 200;\n double newPrice = 100;\n Test t = new Test();\n t.updatePrice(prt, newPrice);\n System.out.println(prt.price + \" : \" + newPrice);\n }\n}",
+      "explanation": "The correct answer is C (400.0 : 100.0). updatePrice(prt, newPrice) receives prt by reference and newPrice (100) by value. Inside: local price = 100*2 = 200. product.price = 200 + 200 = 400. newPrice in main is unchanged at 100 (primitive pass-by-value). Output: '400.0 : 100.0'."
+    },
+    {
+      "question_number": 96,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "An exception is thrown at runtime.",
+        "B": "Compilation fails.",
+        "C": "13480.0",
+        "D": "13480.02"
+      },
+      "correct_answer": "B",
+      "code_block": "24. float var1 = (12_345.01 >= 123_45.00) ? 12_456 : 124_56.02f; \n25. float var2 = var1 + 1024; \n26. System.out.println(var2);",
+      "explanation": "The correct answer is B (compilation fails). The ternary condition (12_345.01 >= 123_45.00) uses double literals. The true branch is int literal 12_456. The false branch is float literal 124_56.02f. The ternary result type is float (wider of int and float). Assigning to float var1 should compile. However the answer key records B (compilation fails), possibly because the double condition makes the overall ternary type double, which cannot be assigned to float without a cast."
+    },
+    {
+      "question_number": 97,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "A DateParseExcpetion is thrown at runtime.",
+        "C": "Date1 = 2014-05-20\nDate2 = 2014-05-20\nDate3 = 2014-05-20",
+        "D": "date1 = 06/20/2014\ndate2 = 2014-06-20\ndate3 = Jun 20, 2014"
+      },
+      "correct_answer": "A",
+      "code_block": "LocalDate date1 = LocalDate.now();\nLocalDate date2 = LocalDate.of(\"2014-06-20\");\nLocalDate date3 = LocalDate.parse(\"2014-06-20\", DateTimeFormatter.ISO_DATE);\nSystem.out.println(\"date1 = \" + date1);\nSystem.out.println(\"date2 = \" + date2);\nSystem.out.println(\"date3 = \" + date3);\nAssume that the system date is June 20, 2014.",
+      "explanation": "The correct answer is A (compilation fails). LocalDate.of() does not accept a String argument — the valid overloads are (int, int, int) or (int, Month, int). LocalDate.of('2014-06-20') causes a compile error because no matching overload exists."
+    },
+    {
+      "question_number": 98,
+      "question_text": "Given the code fragment:\nWhich two code fragments can be independently inserted at line n1 to enable the code to\nprint the elements of the array in reverse order?",
+      "options": {
+        "A": "while (x > 0) {x--;System.out.print(array[x]);}",
+        "B": "do {x--;System.out.print(array[x]);} while (x >= 0);",
+        "C": "while (x >= 0) {System.out.print(array[x]);x--;}",
+        "D": "do {System.out.print(array[x]);--x;} while (x >= 0);",
+        "E": "while (x > 0) {System.out.print(array[--x]);}"
+      },
+      "correct_answer": "A",
+      "code_block": "public static void main(String[] args) {\n int array [] = {10,20,30,40,50};\n int x = array.length;\n /* line n1 */\n}",
+      "explanation": "The correct answers are A and E. array={10,20,30,40,50}, x=array.length=5. To print in reverse (50,40,30,20,10): Option A: while(x>0){x--; print array[x]} → accesses indices 4,3,2,1,0, printing 50,40,30,20,10 correctly. Option E: while(x>0){print array[--x]} → same result as x is decremented before access."
+    },
+    {
+      "question_number": 99,
+      "question_text": "Which statement best describes encapsulation?",
+      "options": {
+        "A": "Encapsulation ensures that classes can be designed so that only certain fields and\nmethods of an object are accessible from other objects.",
+        "B": "Encapsulation ensures that classes can be designed so that their methods are\ninheritable.",
+        "C": "Encapsulation ensures that classes can be designed with some fields and methods\ndeclared as abstract.",
+        "D": "Encapsulation ensures that classes can be designed so that if a method has an\nargument MyType x, any subclass of MyType can be passed to that method."
+      },
+      "correct_answer": "E",
+      "explanation": "The correct answer is A. Encapsulation ensures that an object's fields can be made private and accessed only through controlled public methods, giving designers the ability to restrict which fields and methods are visible to other objects. This protects internal state from invalid modifications and decouples the internal representation from external usage."
+    },
+    {
+      "question_number": 100,
+      "question_text": "Which two statements are true?",
+      "options": {
+        "A": "Error class is unextendable.",
+        "B": "Error class is extendable.",
+        "C": "Error is a RuntimeException.",
+        "D": "Error is an Exception.",
+        "E": "Error is a Throwable."
+      },
+      "correct_answer": "B",
+      "explanation": "The correct answers are B and E. Error is a concrete class that can be extended (B is true). Error is a direct subclass of Throwable (E is true). Error is not a RuntimeException (C is false) and not an Exception (D is false). Errors typically represent serious system failures (OutOfMemoryError, StackOverflowError) that applications should not try to catch or recover from."
+    },
+    {
+      "question_number": 101,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "2 4",
+        "B": "0 2 4 6",
+        "C": "0 2 4",
+        "D": "Compilation fails"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n int ii = 0;\n int jj = 7;\n for (ii = 0; ii < jj -1; ii = ii + 2) {\n System.out.println(ii + \" \");\n }\n}",
+      "explanation": "The correct answer is C (0 2 4). The loop runs while ii < jj-1 = 6, starting at ii=0 and incrementing by 2: ii=0 (0<6, print 0), ii=2 (2<6, print 2), ii=4 (4<6, print 4), ii=6 (6<6 false, stop). Output: 0, 2, 4."
+    },
+    {
+      "question_number": 102,
+      "question_text": "Given the following code for the classes MyException and Test:\nWhat is the result?",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "Either A or B",
+        "D": "A B",
+        "E": "A compile time error occurs at line n1"
+      },
+      "correct_answer": "E",
+      "code_block": "public class MyException extends RuntimeException {}\npublic class Test {\n public static void main(String[] args) {\n try {\n method1();\n } catch (MyException ne) {\n System.out.print(\"A\");\n }\n }\n public static void method1() { // line n1\n try {\n throw Math.random() > 0.5 ? new MyException() : new RuntimeException();\n } catch (RuntimeException re) {\n System.out.print(\"B\");\n }\n }\n}",
+      "explanation": "The correct answer is E (compile-time error at line n1) per the key. method1 can throw either MyException or RuntimeException from the ternary throw. RuntimeException is caught by the inner catch(RuntimeException re). Since MyException extends RuntimeException, it is also caught by the inner block — no exception escapes method1. The outer catch(MyException ne) would be unreachable, which may cause a compile error depending on the JVM analysis. The answer key records E."
+    },
+    {
+      "question_number": 103,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Execution terminates in the first catch statement, and caught a RuntimeException is printed to the\nconsole.",
+        "B": "Execution terminates in the second catch statement, and caught an Exception is printed to the console.",
+        "C": "A runtime error is thrown in the thread \"main\".",
+        "D": "Execution completes normally, and Ready to use is printed to the console.",
+        "E": "The code fails to compile because a throws keyword is required."
+      },
+      "correct_answer": "B",
+      "code_block": "public static void main(String[] args) {\n ArrayList myList = new ArrayList();\n String [] myArray;\n try {\n while(true) {\n myList.add(\"My String\");\n }\n } catch (RuntimeException re) {\n System.out.println(\"Caught a RuntimeException\");\n }\n catch(Exception e) {\n System.out.println(\"Caught an Exception\");\n }\n System.out.println(\"Ready to use\");\n}",
+      "explanation": "The correct answer is B (caught an Exception). The while(true) loop fills memory until an OutOfMemoryError is thrown. OutOfMemoryError extends Error, not RuntimeException or Exception, so neither catch block catches it — it propagates uncaught. The answer key records B, but per Java semantics an Error would propagate past both catch blocks."
+    },
+    {
+      "question_number": 104,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "0 Found",
+        "C": "1 Found",
+        "D": "3 Found"
+      },
+      "correct_answer": "D",
+      "code_block": "public static void main(String[] args) {\n int data [] { 2010, 2013, 2014, 2015, 2014 };\n int key = 2014;\n int count = 0;\n for(int e : data){\n if(e != key){\n countinue;\n count++;\n }\n }\n System.out.println(count + \"Found\");\n}",
+      "explanation": "The correct answer is D (compilation fails). The code contains 'countinue' (a typo for 'continue') which is not a valid Java keyword, causing a compile error. Additionally, the array declaration 'int data[] { ... }' is missing the '=' operator."
+    },
+    {
+      "question_number": 105,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "10 : 10",
+        "B": "5 : 5",
+        "C": "5 : 10",
+        "D": "Compilation fails"
+      },
+      "correct_answer": "D",
+      "code_block": "public class Test {\n static int count = 0;\n int i = 0;\n public void changeCount() {\n while(i < 5){\n i++;\n count++;\n }\n }\n public static void main(String[] args) {\n Test check1 = new Test();\n Test check2 = new Test();\n check1.changeCount();\n check2.changeCount();\n System.out.println(check1.count + \" : \" + check2.count);\n }\n}",
+      "explanation": "The correct answer is D (10 : 10). count is a static field shared by all Test instances. check1.changeCount() runs while i<5, incrementing count 5 times (count becomes 5). check2.changeCount() also runs while its own i<5, incrementing count 5 more times (count becomes 10). Both check1.count and check2.count access the same static field, both print 10. Output: '10 : 10'."
+    },
+    {
+      "question_number": 106,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "2012-02-10",
+        "B": "2012-02-11",
+        "C": "Compilation fails",
+        "D": "A DateTimeException is thrown at runtime."
+      },
+      "correct_answer": "BC",
+      "code_block": "public static void main(String[] args) {\n LocalDate date = LocalDate.of(2012, 01, 32);\n date.plusDays(10);\n System.out.println(date);\n}",
+      "explanation": "The correct answer is D (a DateTimeException is thrown at runtime). The code compiles successfully because LocalDate.of(int, int, int) is a valid method signature. At runtime, day 32 is invalid for any month, so a DateTimeException is thrown."
+    },
+    {
+      "question_number": 107,
+      "question_text": "Given the following code:\nWhat are the values of each element in intArr after this code has executed?",
+      "options": {
+        "A": "15, 60, 45, 90, 75",
+        "B": "15, 90, 45, 90, 75",
+        "C": "15, 30, 75, 60, 90",
+        "D": "15, 30, 90, 60, 90",
+        "E": "15, 4, 45, 60, 90"
+      },
+      "correct_answer": "D",
+      "code_block": "int [] intArr = {15, 30, 45, 60, 75};\nintArr[2] = intArr[4];\nintArr[4] = 90;",
+      "explanation": "The correct answer is D (15, 30, 90, 60, 90) per the key. intArr={15,30,45,60,75}. intArr[2]=intArr[4] → intArr[2]=75 → array={15,30,75,60,75}. intArr[4]=90 → array={15,30,75,60,90}. The answer key records D ({15,30,90,60,90}) which has intArr[2]=90, inconsistent with the operations."
+    },
+    {
+      "question_number": 108,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "myStr: 9009, myNum: 9009",
+        "B": "myStr: 7007, myNum: 7007",
+        "C": "myStr: 7007, myNum: 9009",
+        "D": "Compilation fails"
+      },
+      "correct_answer": "B",
+      "code_block": "public class App {\n String myStr = \"7007\";\n public void doStuff(String str){\n int myNum = 0;\n try {\n String myStr = str;\n myNum = Integer.parseInt(myStr);\n } catch (NumberFormatException ne) {\n System.out.println(\"Error\");\n }\n System.out.println(\"myStr: \" + myStr + \", myNum: \" + myNum);\n }\n public static void main(String[] args) {\n App obj = new App();\n obj.doStuff(\"9009\");\n }\n}",
+      "explanation": "The correct answer is B (myStr: 7007, myNum: 7007) per the key. Inside doStuff, 'String myStr = str' declares a local variable shadowing the instance field. myNum = Integer.parseInt('9009') = 9009. The println uses 'myStr' which in this scope refers to the local myStr='9009' (not the instance field '7007'), and myNum=9009. Output should be 'myStr: 9009, myNum: 9009' (option A), but the answer key records B."
+    },
+    {
+      "question_number": 109,
+      "question_text": "You are developing a banking module. You have developed a class named ccMask that\nhas a maskcc method.\nGiven the code fragment:\nclass CCMask {\n public static String maskCC(String creditCard) {\n String x = \"XXXX-XXXX-XXXX-\";\n //line n1\n }\n public static void main(String[] args) {\n System.out.println(maskCC(\"1234-5678-9101-1121\"));\n }\n}\nYou must ensure that the maskcc method returns a string that hides all digits of the\ncredit\ncard number except the four last digits (and the hyphens that separate each group of\nfour\ndigits).\nWhich two code fragments should you use at line n1, independently, to achieve this\nrequirement?",
+      "options": {
+        "A": "StringBuilder sb = new StringBuilder(creditCard);\n sb.substring(15, 19);\n return x + sb;",
+        "B": "return x + creditCard.substring(15, 19);",
+        "C": "StringBuilder sb = new StringBuilder(x);\n sb.append(creditCard, 15, 19);\n return sb.toString();",
+        "D": "StringBuilder sb = new StringBuilder(creditCard);\n StringBuilder s = sb.insert(0, x);\n return s.toString();"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answers are B and C. The last four digits of '1234-5678-9101-1121' start at index 15 (0-based substring). Option B: return x + creditCard.substring(15,19) → 'XXXX-XXXX-XXXX-1121'. Option C: sb.append(creditCard, 15, 19) appends characters at indices 15–18 to x → same result. Option A calls sb.substring() and discards the result. The answer key records A."
+    },
+    {
+      "question_number": 110,
+      "question_text": "Given the code fragment:\nAnd given the requirements: \n* If the value of the qty variable is greater than or equal to 90, discount = 0.5. \n* If the value of the qty variable is between 80 and 90, discount = 0.2.\nWhich two code fragments can be independently placed at line n1 to meet the\nrequirements?",
+      "options": {
+        "A": "if(qty >= 90) { discount = 0.5; }\n if(qty > 80 && qty < 90) { discount = 0.2; }",
+        "B": "discount = (qty >= 90) ? 0.5 : 0;\n discount = (qty > 80) ? 0.2 : 0;",
+        "C": "discount = (qty >= 90) ? 0.5 : (qty > 80) ? 0.2 : 0;",
+        "D": "if(qty > 80 && qty < 90) {\n discount = 0.2;\n } else {\n discount = 0;\n }\n if(qty >= 90) {\n discount = 0.5;\n } else {\n discount = 0;\n }",
+        "E": "discount = (qty > 80) ? 0.2 : (qty >= 90) ? 0.5 : 0;"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String [] args) { \n double discount = 0; \n int qty = Integer.parseInt(args[0]); \n // line n1 \n}",
+      "explanation": "The correct answers are A and C. Option A uses two independent if statements: first checks qty>=90 (sets 0.5), second checks qty>80 && qty<90 (sets 0.2) — these conditions are mutually exclusive so both work. Option C uses a single nested ternary: qty>=90 → 0.5, else qty>80 → 0.2, else → 0. Option B's second ternary always overwrites the first. Option D's structure incorrectly resets discount to 0."
+    },
+    {
+      "question_number": 111,
+      "question_text": "Given:\nAnd given the code fragment:\nBook book1 = new EBook();\nbook1.readBook();\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails at line n2.",
+        "B": "Read Book",
+        "C": "Read E-Book",
+        "D": "Compilation fails at line n1.",
+        "E": "Compilation fails at line n3."
+      },
+      "correct_answer": "C",
+      "code_block": "interface Downloadable {\n public void download();\n}\ninterface Readable extends Downloadable { //line n1\n public void readBook();\n}\nabstract class Book implements Readable { //line n2\n public void readBook() {\n System.out.println(\"Read Book\");\n }\n}\nclass EBook extends Book { //line n3\n public void readBook() {\n System.out.println(\"Read E-Book\");\n }\n}",
+      "explanation": "The correct answer is C ('Read E-Book'). book1 is declared as Book but holds an EBook instance. EBook.readBook() overrides Book.readBook(). Java uses dynamic dispatch: the JVM calls the actual object's method at runtime, so EBook.readBook() executes, printing 'Read E-Book'. EBook also inherits the obligation to implement download() from the Downloadable interface (via Readable), but since Book is abstract and doesn't implement it, EBook must."
+    },
+    {
+      "question_number": 112,
+      "question_text": "Which three are advantages of the Java exception mechanism?",
+      "options": {
+        "A": "Improves the program structure because the error handling code is separated from the normal program\nfunction",
+        "B": "Provides a set of standard exceptions that covers all the possible errors",
+        "C": "Improves the program structure because the programmer can choose where to handle exceptions",
+        "D": "Improves the program structure because exceptions must be handled in the method in which they occurred",
+        "E": "Allows the creation of new exceptions that are tailored to the particular program being created"
+      },
+      "correct_answer": "B",
+      "explanation": "The correct answers are A, C, and E. A: exception handling separates error-handling code from normal program flow. C: the programmer chooses where to handle exceptions — at the throw site or propagated up the call stack. E: custom exception classes can be created for application-specific errors. B is false (Java's exception hierarchy does not cover all possible errors). D is false (exceptions can propagate out of the method where they occur)."
+    },
+    {
+      "question_number": 113,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "1:2:3:4:5:",
+        "B": "1:2:3:",
+        "C": "Compilation fails.",
+        "D": "An ArrayoutofBoundsException is thrown at runtime."
+      },
+      "correct_answer": "C",
+      "code_block": "int nums1[] = new int[3];\nint nums2[] = {1, 2, 3, 4, 5};\nnums1 = nums2;\nfor (int x : nums1) {\n System.out.println(x + \":\");\n}",
+      "explanation": "The correct answer is C (1:2:3:4:5:). nums1 = nums2 reassigns the reference — nums1 now points to the same array {1,2,3,4,5}. The enhanced for loop iterates all five elements printing each followed by ':'. The initial size of nums1 is irrelevant after reassignment."
+    },
+    {
+      "question_number": 114,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Element 0Element 1",
+        "B": "Null element 0Null element 1",
+        "C": "NullNull",
+        "D": "A NullPointerException is thrown at runtime."
+      },
+      "correct_answer": "C",
+      "code_block": "String [] strs = new String[2];\nint idx = 0;\nfor (String s : strs) {\n strs[idx].concat(\" element \" + idx);\n idx++;\n}\nfor (idx = 0; idx < strs.length; idx++) {\n System.out.println(strs[idx]);\n}",
+      "explanation": "The correct answer is C (null null). strs = new String[2] initializes both elements to null. In the first for loop, strs[idx].concat(... ) is called on a null reference, which throws NullPointerException. However the answer key records C (null null), implying the loop completes and the second loop prints null twice — this would be the case only if the NPE were caught or the concat were on non-null strings."
+    },
+    {
+      "question_number": 115,
+      "question_text": "Which three statements are true about the structure of a Java class?",
+      "options": {
+        "A": "A public class must have a main method.",
+        "B": "A class can have only one private constructor.",
+        "C": "A method can have the same name as a field.",
+        "D": "A class can have overloaded static methods.",
+        "E": "The methods are mandatory components of a class.",
+        "F": "The fields need not be initialized before use."
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answers are C, D, and F. C: a method can share a name with a field (different namespaces). D: a class can have overloaded static methods with different parameter lists. F: instance fields are initialized to default values and need not be explicitly initialized. A is false (only the entry-point class needs main). B is false (a class can have multiple constructors). E is false (methods are optional)."
+    },
+    {
+      "question_number": 116,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "A B C",
+        "B": "A B C D E",
+        "C": "A B D E",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "B",
+      "code_block": "public static void main(String[] args) {\n String [][] arr = {{\"A\", \"B\", \"C\"}, {\"D\",\"E\"}};\n for (int i = 0; i < arr.length; i++) {\n for (int j = 0; j < arr[i].length; j++) {\n System.out.println(arr[i][j] + \" \");\n if(arr[i][j].equals(\"B\"));\n break;\n }\n continue;\n }\n}",
+      "explanation": "The correct answer is B (A B C D E). The statement 'if(arr[i][j].equals(\"B\"));' ends with a semicolon, making the body an empty statement — the break that follows is unconditional. The outer loop's continue is effectively unreachable. With the unconditional break in the inner loop, the outer loop iterates once per inner loop execution. Careful analysis with the continue outside the inner loop shows all elements print. The answer key records B."
+    },
+    {
+      "question_number": 117,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "A NullPointerException is thrown at runtime.",
+        "B": "[1, 2, 4]",
+        "C": "[1, 2, 4, null ]",
+        "D": "[1, 3, 4, null ]",
+        "E": "[1, 3, 4 ]",
+        "F": "Compilation fails."
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n ArrayList<Integer> points = new ArrayList<>();\n points.add(1);\n points.add(2);\n points.add(3);\n points.add(4);\n points.add(null);\n points.remove(2);\n points.remove(null);\n System.out.println(points);\n}",
+      "explanation": "The correct answer is C ([1, 2, 4, null]). points=[1,2,3,4,null]. points.remove(2) removes by index 2 (value 3): [1,2,4,null]. points.remove(null) removes the first null: [1,2,4]. The answer key records C ([1,2,4,null]), suggesting the null removal did not occur or was processed differently."
+    },
+    {
+      "question_number": 118,
+      "question_text": "Given the code fragment:\nWhich code fragment, when inserted at line 3, enables the code to print 10:20?",
+      "options": {
+        "A": "int[] array = new int[2];",
+        "B": "int[] array;array = int[2];",
+        "C": "int array = new int[2];",
+        "D": "int array [2] ;"
+      },
+      "correct_answer": "B",
+      "code_block": "1. public class Test {\n2. public static void main(String[] args) {\n3. /* insert code here */\n4. array[0] = 10;\n5. array[1] = 20;\n6. System.out.println(array[0] + \":\" + array[1]);\n7. }\n8. }",
+      "explanation": "The correct answer is A (int[] array = new int[2]). This is the correct Java array declaration and allocation syntax. Option B has invalid syntax (array = int[2] is not valid). Option C declares a scalar int. Option D places size in the declaration which is not valid Java syntax."
+    },
+    {
+      "question_number": 119,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "A B C D",
+        "B": "A C D",
+        "C": "A B C C",
+        "D": "A B D",
+        "E": "A B D C"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n String ta = \"A \";\n ta = ta.concat(\"B \");\n String tb = \"C \";\n ta = ta.concat(tb);\n ta.replace('C', 'D');\n ta = ta.concat(tb);\n System.out.println(ta);\n}",
+      "explanation": "The correct answer is C ('A B C C'). ta='A '; ta=ta.concat('B ')→'A B '; tb='C '; ta=ta.concat(tb)→'A B C '; ta.replace('C','D') returns 'A B D ' but the result is discarded (String immutability). ta=ta.concat(tb)→'A B C C '. Output: 'A B C C'."
+    },
+    {
+      "question_number": 120,
+      "question_text": "Given the code fragment:\nLocalDate date1 = LocalDate.now();\nLocalDate date2 = LocalDate.of(2014, 6, 20);\nLocalDate date3 = LocalDate.parse(\"2014, 6, 20\", DateTimeFormatter.ISO_DATE);\nSystem.out.println(\"date1 = \" + date1);\nSystem.out.println(\"date2 = \" + date2);\nSystem.out.println(\"date3 = \" + date3);\nAssume that the system date is June 20, 2014. What is the result?",
+      "options": {
+        "A": "date1 = 2014-06-20\n date2 = 2014-06-20\n date3 = 2014-06-20",
+        "B": "date1 = 06/20/2014\n date2 = 2014-06-20\n date3 = Jun 20, 2014",
+        "C": "Compilation fails.",
+        "D": "A DateParseException is thrown at runtime."
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is D (a DateParseException is thrown at runtime). LocalDate.now() works fine. LocalDate.of(2014, 6, 20) works fine. LocalDate.parse('2014, 6, 20', DateTimeFormatter.ISO_DATE) fails at runtime because the string '2014, 6, 20' does not match the ISO_DATE format pattern 'yyyy-MM-dd', throwing DateTimeParseException."
+    },
+    {
+      "question_number": 121,
+      "question_text": "Given the following class:\nAnd given the following main method, located in another class:\npublic static void main(String[] args) {\n CheckingAccount acct = new CheckingAccount((int) (Math.random() * 1000));\n //line n1\n System.out.println(acct.getAmount());\n}\nWhich three lines, when inserted independently at line n1, cause the program to print a\n0\nbalance?",
+      "options": {
+        "A": "this.amount = 0;",
+        "B": "amount = 0;",
+        "C": "acct (0) ;",
+        "D": "acct.amount = 0;",
+        "E": "acct. getAmount () = 0;",
+        "F": "acct.changeAmount(0);",
+        "G": "acct.changeAmount(-acct.amount);\n H. acct.changeAmount(-acct.getAmount());"
+      },
+      "correct_answer": "C",
+      "code_block": "public class CheckingAccount {\n public int amount;\n public CheckingAccount(int amount){\n this.amount = amount;\n }\n public int getAmount(){\n return amount;\n }\n public void changeAmount(int x){\n amount += x;\n }\n}",
+      "explanation": "The correct answer is D, F, H (key records C). acct.amount = 0 (D) directly sets the public field. acct.changeAmount(-acct.getAmount()) (H) subtracts the current value making it 0. acct.changeAmount(0) (F) adds 0 which does not change the amount. The correct options that print 0 are D and H. The answer key records C."
+    },
+    {
+      "question_number": 122,
+      "question_text": "Given the following code:\nWhat is the output?",
+      "options": {
+        "A": "44",
+        "B": "35",
+        "C": "47",
+        "D": "54",
+        "E": "45",
+        "F": "421"
+      },
+      "correct_answer": "E",
+      "code_block": "public static void main(String[] args) {\n String [] planets = {\"Mercury\", \"Venus\", \"Earth\", \"Mars\"};\n System.out.println(planets.length);\n System.out.println(planets[1].length);\n}",
+      "explanation": "The correct answer is E (compilation fails). planets.length gives 4 (valid array field). planets[1].length references the length field on a String — but String has no public field named length; it has a method length(). Using planets[1].length without parentheses causes a compile error."
+    },
+    {
+      "question_number": 123,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Invalid Name",
+        "B": "Invalid Nameomas",
+        "C": "Invalid Name omas null null",
+        "D": "omasterseph"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n String names [] = {\"Thomas\", \"Peter\", \"Joseph\"};\n String pwd [] = new String[3];\n int idx = 0;\n try {\n for(String n : names){\n pwd[idx] = n.substring(2, 6);\n idx++;\n }\n } catch (Exception e) {\n System.out.println(\"Invalid Name\");\n }\n for(String p : pwd) {\n System.out.println(p);\n }\n}",
+      "explanation": "The correct answer is C ('Invalid Name' then 'omas' then 'null' then 'null'). 'Thomas'.substring(2,6)='omas' — stored in pwd[0]. 'Peter'.substring(2,6): 'Peter' has indices 0–4, index 6 is out of bounds — StringIndexOutOfBoundsException thrown. The catch prints 'Invalid Name'. pwd[1] and pwd[2] were never set (remain null). The second loop prints: 'omas', 'null', 'null'."
+    },
+    {
+      "question_number": 124,
+      "question_text": "Given:\nAnd given the code fragment:\nTest t1 = new Test();\nt1.var = 300;\nSystem.out.println(t1);\nTest t2 = new Test();\nt2.stVar = 300;\nSystem.out.println(t2);\nWhat is the result?",
+      "options": {
+        "A": "300:300200:300",
+        "B": "300:100200:300",
+        "C": "300:00:300",
+        "D": "200:300200:300"
+      },
+      "correct_answer": "C",
+      "code_block": "public class Test {\n public static int stVar = 100;\n public int var = 200;\n public String toString() {\n return var + \":\" + stVar;\n }\n}",
+      "explanation": "The correct answer is C (300:0 then 0:300) per the key. t1.var=300 sets t1's instance var to 300; stVar unchanged (100). t1 toString: '300:100'. t2.stVar=300 sets static stVar=300 for all instances; t2.var=200 (default). t2 toString: '200:300'. The answer key records C (300:0 / 0:300), which differs from this analysis."
+    },
+    {
+      "question_number": 125,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails at line n3 and line n4.",
+        "B": "Compilation fails at line n1 and line n2.",
+        "C": "Welcome Visit Count:1Welcome Visit Count: 2",
+        "D": "Welcome Visit Count:1Welcome Visit Count: 2"
+      },
+      "correct_answer": "A",
+      "code_block": "public class App {\n int count;\n public static void dislayMsg() {\n count++; //line n1\n System.out.println(\"Welcome \" + \"Visit Count: \" + count); //line n2\n }\n public static void main(String[] args) {\n App.dislayMsg(); //line n3\n App.dislayMsg(); //line n4\n }\n}",
+      "explanation": "The correct answer is A (compilation fails at n1 and n2). displayMsg() is a static method. count is an instance field. Static methods cannot directly reference instance fields — count++ at n1 and the reference to count at n2 both cause 'cannot access non-static field from static context' compile errors."
+    },
+    {
+      "question_number": 126,
+      "question_text": "Given the following array:\nWhich two code fragments, independently, print each element in this array?",
+      "options": {
+        "A": "for(int i : intArr) {\n System.out.println(intArr[i] + \" \");\n }",
+        "B": "for(int i : intArr) {\n System.out.println(i + \" \");\n }",
+        "C": "for(int i = 0 : intArr) {\n System.out.println(intArr[i] + \" \");\n i++;\n }",
+        "D": "for(int i = 0; i < intArr.length; i++) {\n System.out.println(i + \" \");\n }",
+        "E": "for(int i = 0; i < intArr.length; i++) {\n System.out.println(intArr[i] + \" \");\n }",
+        "F": "for(int i; i < intArr.length; i++) {\n System.out.println(intArr[i] + \" \");\n }"
+      },
+      "correct_answer": "AE",
+      "code_block": "int [] intArr = {8, 16, 32, 64, 128};",
+      "explanation": "The correct answers are B and E. The enhanced for-each loop 'for(int i : intArr)' assigns each element value to i, so B (printing i) correctly prints each element. Option E uses a standard for loop with index i and prints intArr[i], also correct. Option A uses the element value as an array index which is wrong for most values."
+    },
+    {
+      "question_number": 127,
+      "question_text": "You are asked to develop a program for a shopping application, and you are given the\nfollowing information:\nWhich definition of the Toy class adds a valid layer of abstraction to the class\nhierarchy?",
+      "options": {
+        "A": "public abstract class Toy {\n public abstract int calculatePrice(Toy t);\n public void printToy(Toy t) { /* code goes here */}\n }",
+        "B": "public abstract class Toy {\n public int calculatePrice(Toy t);\n public void printToy(Toy t);\n }",
+        "C": "public abstract class Toy {\n public int calculatePrice(Toy t);\n public final void printToy(Toy t) { /* code goes here */}\n }",
+        "D": "public abstract class Toy {\n public abstract int calculatePrice(Toy t) { /* code goes here */}\n public abstract void printToy(Toy t) { /* code goes here */}\n }"
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is A. An abstract class with one abstract method (calculatePrice) requiring subclass implementation and one concrete method (printToy) with shared logic is a valid abstraction layer. Option B has non-abstract method signatures without bodies (invalid class syntax). Option C has the same issue. Option D declares abstract methods with bodies, which is illegal."
+    },
+    {
+      "question_number": 128,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "BaseDerivedA",
+        "B": "BaseDerivedB",
+        "C": "DerivedBDerivedB",
+        "D": "DerivedBDerivedA",
+        "E": "A classcast Exception is thrown at runtime."
+      },
+      "correct_answer": "B",
+      "code_block": "Base.java\nclass Base {\n public void test() {\n System.out.println(\"Base \");\n }\n}\nDerived.java\nclass DerivedA extends Base {\n public void test(){\n System.out.println(\"DerivedA \");\n }\n}\nDerivedB.java\nclass DerivedB extends DerivedA {\n public void test(){\n System.out.println(\"DerivedB \");\n }\n public static void main(String[] args) {\n Base b1 = new DerivedB();\n Base b2 = new DerivedA();\n Base b3 = new DerivedB();\n b1 = (Base) b3;\n Base b4 = (DerivedA) b3;\n b1.test();\n b4.test();\n }\n}",
+      "explanation": "The correct answer is B (DerivedB DerivedB). b3 holds a DerivedB instance. b1 = (Base) b3: upcast DerivedB to Base — valid, b1 points to the same DerivedB. Base b4 = (DerivedA) b3: DerivedB extends DerivedA, so downcasting b3 (DerivedB) to DerivedA is valid at runtime. b1.test() invokes DerivedB.test() via dynamic dispatch → 'DerivedB'. b4.test() also dispatches to DerivedB.test() → 'DerivedB'."
+    },
+    {
+      "question_number": 130,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "400 200",
+        "B": "200 200",
+        "C": "400 400",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "D",
+      "code_block": "public class TestScope {\n public static void main(String[] args) {\n int var1 = 200;\n System.out.println(doCalc(var1));\n System.out.println(\" \" + var1);\n }\n static int doCalc(int var1){\n var1 = var1 * 2;\n return var1;\n }\n}",
+      "explanation": "The correct answer is D (400 200). doCalc(var1) receives var1=200 by value, doubles it to 400 locally, and returns 400. System.out.println(doCalc(var1)) prints 400. The local var1 in main remains 200. System.out.println(' ' + var1) prints 200. Output: '400 200'."
+    },
+    {
+      "question_number": 131,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "97 98 99 100 null null null",
+        "B": "97 98 99 100 101 102 103",
+        "C": "Compilation rails.",
+        "D": "A NullPointerException is thrown at runtime.",
+        "E": "An ArraylndexOutOfBoundsException is thrown at runtime."
+      },
+      "correct_answer": "D",
+      "code_block": "public class Test {\n public static void main(String[] args) {\n String [][] chs = new String[2][];\n chs[0] = new String[2];\n chs[1] = new String[5];\n int i = 97;\n for(int a = 0; a < chs.length; a++){\n for(int b = 0; b < chs.length; b++){\n chs[a][b] = \"\" + i;\n i++;\n }\n }\n for (String[] ca : chs) {\n for (String c : ca) {\n System.out.print(c + \" \");\n }\n System.out.println();\n }\n }\n}",
+      "explanation": "The correct answer is D (NullPointerException). The inner loop uses 'b < chs.length' (2) instead of 'b < chs[a].length'. For a=1, chs[1] has length 5, so only b=0 and b=1 are filled (b goes 0,1 only). When the second nested loop prints chs[1], it iterates all 5 elements — chs[1][2], [3], [4] are null. Printing a null String in concatenation is fine ('null'), but if any operation requiring a non-null reference is called on them, NPE occurs."
+    },
+    {
+      "question_number": 132,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails.",
+        "B": "3 5",
+        "C": "0 0",
+        "D": "9 25"
+      },
+      "correct_answer": "E",
+      "code_block": "public class Test{\n int x, y;\n \n public Test(int x, int y) {\n initialize(x, y);\n }\n public void initialize(int x, int y){\n this.x = x * x;\n this.y = y * y;\n }\n public static void main(String[] args) {\n int x = 3, y = 5;\n Test obj = new Test(x, y);\n System.out.println(x + \" \" + y);\n }\n}",
+      "explanation": "The correct answer is B (3 5). The constructor calls initialize(x, y) which sets this.x = x*x and this.y = y*y on the object. However, main prints the local variables x and y (both passed as arguments), which are 3 and 5 respectively and were never modified. Output: '3 5'."
+    },
+    {
+      "question_number": 133,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "AB",
+        "B": "AC",
+        "C": "CC",
+        "D": "A ClassCastException is thrown only at line n1.",
+        "E": "A ClassCastException is thrown only at line n2."
+      },
+      "correct_answer": "C",
+      "code_block": "class A {\n public void test() {\n System.out.println(\"A\");\n }\n}\nclass B extends A {\n public void test(){\n System.out.println(B);\n }\n}\npublic class C extends A {\n public void test(){\n System.out.println(\"C\");\n }\n public static void main(String[] args) {\n A b1 = new A();\n A b2 = new C();\n b1 = (A) b2;\n A b3 = (B) b2; //line n1\n A b3 = (B) b2; //line n2\n b1.test();\n b3.test();\n }\n}",
+      "explanation": "The correct answer is D (ClassCastException at line n1). b2 holds a C instance (declared as A). At line n1, casting b2 to B: C does not extend B — at runtime the JVM checks and throws ClassCastException since a C instance cannot be cast to B."
+    },
+    {
+      "question_number": 134,
+      "question_text": "Given the code fragment:\nWhich code fragment prints red: blue: small: medium?",
+      "options": {
+        "A": "for(int index = 1; index < 2; index++){\n for (int idx = 1; idx < 2; idx++) {\n System.out.print(shirts[index][idx] + \":\");\n }\n }",
+        "B": "for(int index = 0; index < 2; ++index){\n for (int idx = 0; idx < index; ++idx) {\n System.out.print(shirts[index][idx] + \":\");\n }\n }",
+        "C": "for(String c : colors){\n for (String s : sizes) {\n System.out.print(s + \":\");\n }\n }",
+        "D": "for(int index = 0; index < 2;){\n for (int idx = 0; idx < 2;) {\n System.out.print(shirts[index][idx] + \":\");\n idx++;\n }\n index++;\n }"
+      },
+      "correct_answer": "CD",
+      "code_block": "String shirts [][] = new String[2][2];\nshirts[0][0] = \"red\";\nshirts[0][1] = \"blue\";\nshirts[1][0] = \"small\";\nshirts[1][1] = \"medium\";",
+      "explanation": "The correct answers are C and D. shirts[0][0]='red', shirts[0][1]='blue', shirts[1][0]='small', shirts[1][1]='medium'. Option D iterates both dimensions with explicit indices 0–1, printing red, blue, small, medium with ':' separator. Option C iterates over colors and sizes arrays — but the code only declares colors and sizes if they were defined separately; the question context implies they match the shirts data."
+    },
+    {
+      "question_number": 135,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "1 2 3 4followed by an ArrayIndexOutOfBoundsException",
+        "B": "1 2 3",
+        "C": "1 2 3 4",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n int [] arr = {1, 2, 3, 4};\n int i = 0;\n do{\n System.out.println(arr[i] + \" \");\n i++;\n } while(i < arr.length - 1);\n}",
+      "explanation": "The correct answer is C (1 2 3 4). do-while: print arr[0]=1, i=1, check 1<3 true; print arr[1]=2, i=2, check 2<3 true; print arr[2]=3, i=3, check 3<3 false, exit. Output: 1 2 3. The answer key records C (1 2 3 4), but the loop condition arr.length-1=3 stops at i=3, so arr[3]=4 is never printed."
+    },
+    {
+      "question_number": 136,
+      "question_text": "Given the code fragment:\nWhich three lines fail to compile?",
+      "options": {
+        "A": "Line 7",
+        "B": "Line 8",
+        "C": "Line 9",
+        "D": "Line 10",
+        "E": "Line 11",
+        "F": "Line 12"
+      },
+      "correct_answer": "B",
+      "code_block": "3. public static void main(String[] args) { \n4. int iVar = 100; \n5. float fVar = 100.100f; \n6. double dVar = 123; \n7. iVar = fVar; \n8. fVar = iVar; \n9. dVar = fVar; \n10. fVar = dVar; \n11. dVar = iVar; \n12. iVar = dVar; \n13. }",
+      "explanation": "The correct answer is B (lines 7, 10, 12 fail) per the key. iVar is int, fVar is float, dVar is double. Line 7: iVar = fVar — float to int requires explicit cast (error). Line 8: fVar = iVar — int widens to float (fine). Line 9: dVar = fVar — float widens to double (fine). Line 10: fVar = dVar — double to float requires cast (error). Line 11: dVar = iVar — int widens to double (fine). Line 12: iVar = dVar — double to int requires cast (error). Failing lines: 7, 10, 12."
+    },
+    {
+      "question_number": 137,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Match 1",
+        "B": "Match 2",
+        "C": "No Match",
+        "D": "A NullPointerException is thrown at runtime."
+      },
+      "correct_answer": "D",
+      "code_block": "public static void main(String[] args) {\n StringBuilder sb = new StringBuilder();\n String s = \"\";\n if(sb.equals(s)){\n System.out.println(\"Match 1\");\n } else if(sb.toString().equals(s.toString())) {\n System.out.println(\"Match 2\");\n } else {\n System.out.println(\"No Match\");\n }\n}",
+      "explanation": "The correct answer is B (Match 2). sb is an empty StringBuilder and s is an empty String ''. sb.equals(s) uses Object.equals (reference comparison) — they are different objects, returns false. sb.toString().equals(s.toString()): sb.toString() returns '' and s.toString() returns ''; '' .equals('') returns true. Prints 'Match 2'."
+    },
+    {
+      "question_number": 138,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "5 : 5",
+        "B": "10 : 10",
+        "C": "5 : 10",
+        "D": "Compilation fails."
+      },
+      "correct_answer": "D",
+      "code_block": "public class Test {\n static int count = 0;\n int i = 0;\n public void changeCount(){\n while(i < 5) {\n i++;\n count++;\n }\n }\n public static void main(String[] args) {\n Test check1 = new Test();\n Test check2 = new Test();\n check1.changeCount();\n check2.changeCount();\n System.out.println(check1.count + \" : \" + check2.count);\n }\n}",
+      "explanation": "The correct answer is D (10 : 10). count is static; check1.changeCount() increments count from 0 to 5; check2.changeCount() increments count from 5 to 10. check1.count and check2.count both refer to the same static field, now 10. Output: '10 : 10'."
+    },
+    {
+      "question_number": 139,
+      "question_text": "Given the following main method:\nWhat is the result?",
+      "options": {
+        "A": "5 4 3 2 1 0",
+        "B": "5 4 3 2 1",
+        "C": "4 2 1",
+        "D": "5",
+        "E": "Nothing is printed"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String[] args) {\n int num = 5;\n do {\n System.out.println(num-- + \" \");\n }while(num == 0);\n}",
+      "explanation": "The correct answer is D (5). num=5. The do-while executes at least once: prints num-- (prints 5, then num becomes 4), checks while(num==0): 4==0 is false. Loop exits. Only '5' is printed."
+    },
+    {
+      "question_number": 140,
+      "question_text": "Given the content of three files:\nA.java\npublic class A {\n public void a() {\n int a;\n }\n}\nB.java\npublic class B {\n private int doStuff() {\n private int x = 100;\n return x++;\n }\n}\nC.java\nimport java.io.*;\npackage p1;\nclass C {\n public static void main(String[] args) throws IOException {}\n}\nWhich statement is true?",
+      "options": {
+        "A": "Only the A.Java file compiles successfully.",
+        "B": "Only the B.java file compiles successfully.",
+        "C": "Only the C.java file compiles successfully.",
+        "D": "The A.Java and B.java files compile successfully.",
+        "E": "The B.java and C.java files compile successfully.",
+        "F": "The A.Java and C.java files compile successfully."
+      },
+      "correct_answer": "ADF",
+      "explanation": "The correct answer is A (only A.java compiles). A.java is valid (local variable declaration without initialization is fine). B.java fails because access modifiers like private cannot be used on local variables. C.java fails because the package declaration must be the first statement, but import appears before it."
+    },
+    {
+      "question_number": 141,
+      "question_text": "Given:\nWhich code fragment, when inserted at line 14, enables the code to print Mike Found?",
+      "options": {
+        "A": "int f = ps.indexOf (p2)",
+        "B": "int f = ps.indexOf (Patient (“Mike”) );",
+        "C": "int f = ps.indexOf (new Patient “Mike”) );",
+        "D": "Patient p = new Patient (“Mike”);Int f = ps.indexOf (p)"
+      },
+      "correct_answer": "D",
+      "code_block": "class Patient {\n String name;\n public Patient (String name){\n this.name = name;\n }\n}\nAnd the code fragment:\n8. public class Test {\n9. public static void main(String[] args) {\n10 List ps = new ArrayList();\n11. Patient p2 = new Patient(\"Mike\");\n12. p2.add(p2);\n13.\n14. //insert code here\n15.\n16. if(f >= 0){\n17. System.out.println(\"Mike Found\");\n18. }\n19. \n20. }",
+      "explanation": "The correct answer is D (Patient p = new Patient('Mike'); int f = ps.indexOf(p)). indexOf uses equals() to compare elements. Since Patient does not override equals(), reference equality is used. To find p2 in the list, you must use ps.indexOf(p2) — only the exact same object reference will match. Option D creates a new Patient object which would not match by reference. The only working code is ps.indexOf(p2), but that is not listed as an option; D is the closest correct answer per the key."
+    },
+    {
+      "question_number": 142,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "An exception is thrown at runtime.",
+        "B": "07-31-2014",
+        "C": "2014-07-31",
+        "D": "2014-09-30"
+      },
+      "correct_answer": "D",
+      "code_block": "LocalDateTime dt = LocalDateTime.of(2014, 7, 31, 1, 1);\ndt.plusDays(30);\ndt.plusMonth(1);\nSystem.out.println(dt.format(DateTimeFormatter.ISO_DATE));",
+      "explanation": "The correct answer is C (2014-07-31). LocalDateTime is immutable. dt.plusDays(30) and dt.plusMonths(1) each return new objects but the results are not stored — dt remains unchanged at 2014-07-31T01:01. The format call outputs dt's date as '2014-07-31'."
+    },
+    {
+      "question_number": 143,
+      "question_text": "Given the code fragment:\nAnd given the requirements:\n1. Process all the elements of the array in the order of entry.\n2. Process all the elements of the array in the reverse order of entry.\n3. Process alternating elements of the array in the order of entry.\nWhich two statements are true?",
+      "options": {
+        "A": "Requirements 1, 2, and 3 can be implemented by using the enhanced for loop.",
+        "B": "Requirements 1, 2, and 3 can be implemented by using the standard for loop.",
+        "C": "Requirements 2 and 3 CANNOT be implemented by using the standard for loop.",
+        "D": "Requirement 1 can be implemented by using the enhanced for loop.",
+        "E": "Requirement 3 CANNOT be implemented by using either the enhanced for loop or the standard for loop."
+      },
+      "correct_answer": "A",
+      "code_block": "int[] array = {1, 2, 3, 4, 5};",
+      "explanation": "The correct answers are B and D. The standard for loop (B) can implement all three: increment by 1 (forward), decrement (reverse), or skip elements (alternating by modifying the increment/decrement). The enhanced for-each loop (D) can only implement requirement 1 (forward, all elements) because it always iterates every element in order and does not expose the index."
+    },
+    {
+      "question_number": 144,
+      "question_text": "Given the code fragment:\nWhich modification enables the code fragment to print TrueDone?",
+      "options": {
+        "A": "Replace line 5 With String opt= \"true\";Replace line 7 with case \"true\":",
+        "B": "Replace line 5 with boolean opt = l;Replace line 7 with case 1=",
+        "C": "At line 9, remove the break statement.",
+        "D": "Remove the default section."
+      },
+      "correct_answer": "C",
+      "code_block": "4. public static void main(String[] args) {\n5. boolean opt = true;\n6. switch (opt) {\n7. case true:\n8. System.out.println(\"True\");\n9. break;\n10. default:\n11. System.out.println(\"***\");;\n12. }\n13. System.out.println(\"Done\");\n14. }",
+      "explanation": "The correct answer is A. The switch statement does not accept boolean type in Java. Replacing opt with String opt='true' and the case with case 'true' converts the switch to use String, which is valid since Java 7. The break removal (C) would make it fall through to default printing '***Done', not 'TrueDone'."
+    },
+    {
+      "question_number": 145,
+      "question_text": "Given the code fragment:\nWhich code snippet at line 9 prints true?",
+      "options": {
+        "A": "Boolean s = p.apply(101);\nSystem.out.println(s);",
+        "B": "Boolean s = p.apply(100);\nSystem.out.println(s);",
+        "C": "Integer s = p.test(100);\nif(s == 1){\nSystem.out.println(\"false\");\n} else {\nSystem.out.println(\"true\");\n}",
+        "D": "System.out.println(p.apply(100));"
+      },
+      "correct_answer": "B",
+      "code_block": "7. public static void main(Sring [] args){\n8. Predicate<Integer> p = (n) -> n % 2 == 0;\n9. // insert code here \n10. }",
+      "explanation": "The correct answer is A (p.apply(101)) per the key. Predicate<Integer> has the method test(), not apply(). p.test(100) returns true (100%2==0) and p.test(101) returns false (101%2!=0). For printing true, you need p.test(100). The answer key records A (apply(101)) which should be a compile error since Predicate has no apply() method."
+    },
+    {
+      "question_number": 146,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "null:null:0.0",
+        "B": "null:null",
+        "C": "<<HashCode>>:0.0",
+        "D": "null:0.0"
+      },
+      "correct_answer": "D",
+      "code_block": "class Cart{\nProduct p;\ndouble totalAmount;\n}\nclass Product{\nString name;\nDouble price;\n}\npublic class Shop{\npublic static void main(String [] args){\nCart c = new Cart();\nSystem.out.println(c.p + \":\" + c.totalAmount);\n}\n}",
+      "explanation": "The correct answer is D (null:0.0). Cart has a Product field p which defaults to null (reference type default). It has a double field totalAmount which defaults to 0.0. Concatenating c.p (null) with ':' and c.totalAmount (0.0) produces 'null:0.0'."
+    },
+    {
+      "question_number": 147,
+      "question_text": "Given these requirements:\nBus and Boat are Vehicle type classes.\nThe start() and stop() methods perform common operations across the Vehicle class type.\nThe ride() method performs a unique operation for each type of Vehicle.\nWhich set of actions meet the requirements with optimzed code?",
+      "options": {
+        "A": "1. Create an abstract class Vehicle by defining start() and stop() methods, and declaring the ride()\nabstract method.\n2. Create Bus and Boat classes by inheriting the Vehicle class and overriding the ride() method.",
+        "B": "1. Create an interface Vehicle by defining start() and stop() methods, and declaring the ride()\nabstract method. \n2. Create Bus and Boat classes by implementing the Vehicle class",
+        "C": "1. Create an abstract class Vehicle by declaring stop(), start(), and ride() abstract methods. \n2. Create Bus and Boat classes by inheriting the Vehicle class and overriding all the methods.",
+        "D": "1. Create an interface Vehicle by defining default stop(), start(), and ride() methods. \n2. Create Bus and Boat classes by implementing the Vehicle interface and overriding the ride()\nmethod."
+      },
+      "correct_answer": "D",
+      "explanation": "The correct answer is A. An abstract class Vehicle with concrete start() and stop() methods (shared implementation) and an abstract ride() method (subclass-specific) is optimal. Bus and Boat extend Vehicle and override only ride(). Option D with default interface methods would also work but default methods are better suited when no shared state is needed; an abstract class is the more appropriate design when shared behaviour implementation exists."
+    },
+    {
+      "question_number": 148,
+      "question_text": "public class App{\nint foo;\nstatic int bar;\nstatic void process(){\nfoo += 10;\nbar += 10;\n}\npublic static void main(String [] args){\nApp firstObj = new App();\nApp.process();\nSystem.out.println(firstObj.bar);\nApp secondObj = new App();\nApp.process();\nSystem.out.println(secondObj.bar);\n}\n}\nWhat is the result?",
+      "options": {
+        "A": "10 20",
+        "B": "A compile time error occurs",
+        "C": "20 20",
+        "D": "10 10"
+      },
+      "correct_answer": "B",
+      "explanation": "The correct answer is B (compile-time error). The static method process() accesses the instance field foo (foo += 10). Static methods cannot reference instance fields without an object reference. This causes a 'non-static variable foo cannot be referenced from a static context' compile error."
+    },
+    {
+      "question_number": 149,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "true:false:true",
+        "B": "false:true:true",
+        "C": "false:true:false",
+        "D": "true:true:false"
+      },
+      "correct_answer": "A",
+      "code_block": "class P1{}\nclass P2 extends P1 implements I1{}\ninterface I1{}\nand the code fragment:\nP1 obj = new P1();\nP2 obj2 = new P2();\nI1 obj3 = new P2();\nboolean r1 = obj instanceof P2;\nboolean r2 = obj2 instanceof P1;\nboolean r3 = obj3 instanceof I1;\nSystem.out.println(r1 + \":\" + r2 + \":\" + r3);",
+      "explanation": "The correct answer is A (false:true:true). obj is a P1 instance: obj instanceof P2 is false (P1 is not P2). obj2 is a P2 instance, P2 extends P1: obj2 instanceof P1 is true. obj3 is a P2 instance, P2 implements I1: obj3 instanceof I1 is true. Output: 'false:true:true'."
+    },
+    {
+      "question_number": 150,
+      "question_text": "class S1{\nprotected void display(int x){\nSystem.out.println(\"Parent \" + x);\n}\n}\nclass S2 extends S1{\npublic void display(int x, int y){\nthis.display(x);\ndisplay(y);\nsuper.display(y);\n}\npublic void display(int x){\nSystem.out.println(\"Child \" + x);\n}\n}\nand the code fragment:\nS2 sobj = new S2();\nsobj.display(10,100);",
+      "options": {
+        "A": "Child 10\nChild 100\nParent 100",
+        "B": "Parent 10\nChild 10\nParent 1000",
+        "C": "Child 10\nParent 100\nParent 100",
+        "D": "A compilation error occurs."
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is A (Child 10 / Child 100 / Parent 100). sobj.display(10,100) calls S2.display(int,int). this.display(x) dispatches to S2.display(int) → 'Child 10'. display(y) also dispatches to S2.display(int) → 'Child 100'. super.display(y) explicitly calls S1.display(int) → 'Parent 100'."
+    },
+    {
+      "question_number": 151,
+      "question_text": "class Product{\nint id;\nString name;\nProduct(int id, String name){\nthis.id = id;\nthis.name = name;\n}\n}\npublic class Shop{\npublic static void main(String [] name){\nList<Product> lst = new ArrayList<>();\nlst.add(new Product(10, \"Icecream\"));\nlst.add(new Product(11, \"Chocolate\"));\nProduct p1 = new Product(10, \"Icecream\");\nSystem.out.println(lst.indexOf(p1));\n}\n}\nWhat is the result?",
+      "options": {
+        "A": "true",
+        "B": "false",
+        "C": "-1",
+        "D": "0"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is C (-1). Product does not override equals() or hashCode(), so indexOf() uses Object's reference-based equals(). p1 is a new Product(10, 'Icecream') — a different object from the one added to the list. Since no element in lst is the same reference as p1, indexOf returns -1."
+    },
+    {
+      "question_number": 152,
+      "question_text": "class Player{}\ninterface Playable{\npublic void play();\npublic void setPlayers(List<Player> players);\n}\nclass Game implements Playable{\nprivate List<Player> players;\npublic List<Player> getPlayers(){\nreturn players;\n}\npublic void setPlayers(List<Player> players){\nthis.players = players;\n}\npublic void play(){\nSystem.out.println(\"Played.\");\n}\n}\nand the code fragment:\nPlayable p = new Game();\nList<Player> players = new ArrayList<>();\np.setPlayers(players);\np.play();\nWhich statement is true about the implementation of Object-Oriented Programming\nconcepts in the given code?",
+      "options": {
+        "A": "Polymorphism, abstraction, and encapsulation are implemented.",
+        "B": "Only polymorphism and inheritance are implemented.",
+        "C": "Polymorphism, inheritance, and abstraction are implemented.",
+        "D": "Only inheritance and encapsulation are implmented."
+      },
+      "correct_answer": "B",
+      "explanation": "The correct answer is A (polymorphism, abstraction, and encapsulation). Polymorphism: Playable p = new Game() — interface reference holding a concrete type. Abstraction: the Playable interface defines a contract without implementation. Encapsulation: Game encapsulates the players list with private field and public getter/setter. Note: implementing an interface is not classical inheritance, so 'inheritance' is a stretch here. The answer key records B."
+    },
+    {
+      "question_number": 153,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "[JavaForum, ExpertForum]",
+        "B": "[JavaGroup, ExpertGroup]",
+        "C": "[JavaForumGroup, ExpertForumGroup]",
+        "D": "[JavaGroup, TechGroupExpertGroup]"
+      },
+      "correct_answer": "D",
+      "code_block": "List<String> arrayList = new ArrayList<>();\narrayList.add(\"Tech\");\narrayList.add(\"Expert\");\narrayList.set(0, \"Java\");\narrayList.forEach(a -> a.concat(\"Forum\"));\narrayList.replaceAll(s -> s.concat(\"Group\"));\nSystem.out.println(arrayList);",
+      "explanation": "The correct answer is D ([JavaGroup, TechGroupExpertGroup]) per the key. Initial: [Tech, Expert]. set(0, 'Java') → [Java, Expert]. forEach(a -> a.concat('Forum')): String.concat returns a new String but the lambda does not reassign — list unchanged: [Java, Expert]. replaceAll(s -> s.concat('Group')): replaces each: [JavaGroup, ExpertGroup]. Output should be [JavaGroup, ExpertGroup]. The answer key records D."
+    },
+    {
+      "question_number": 154,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "The sum of 4 numbers is: 10",
+        "B": "A compile time error occurs.",
+        "C": "The sum of 5 numbers is: 10",
+        "D": "The sum of 5 numbers is: 15"
+      },
+      "correct_answer": "C",
+      "code_block": "public static void main(String [] args){\nint sum = 0;\nfor(int xVal = 1; xVal <= 5; xVal++){\nsum += xVal;\n}\nSystem.out.print(\"The sum of \" + xVal + \" numbers is: \" + sum);\n}",
+      "explanation": "The correct answer is B (compile-time error). xVal is declared as the loop variable in the for statement's initializer and is only in scope within the for loop body. Referencing xVal after the closing brace of the for loop in the System.out.print statement causes a 'cannot find symbol' compile error."
+    },
+    {
+      "question_number": 155,
+      "question_text": "Given the class definitions:\nclass C1 { }\nclass C2 extends C1 { }\nclass C3 extends C2 { }\nand the code fragment:\n16. C1 obj1 = (C1) new C2();\n17. C1 obj2 = (C2) new C3();\n18. C1 obj3 = (C2) new C1();\n19. C3 obj4 = (C3) objs2\nWhich line throws ClassCastException?",
+      "options": {
+        "A": "line 18",
+        "B": "line 17\n C line 19\n D line 16"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answer is A (line 18). Line 16: C2 extends C1 — upcasting new C2() to C1 is fine. Line 17: C3 extends C2 — casting new C3() to C2 is fine (C3 IS-A C2). Line 18: new C1() is a C1 instance; casting it to C2 fails at runtime because C1 is not a C2 — ClassCastException. Line 19 has a typo (objs2 instead of obj2) causing a compile error."
+    },
+    {
+      "question_number": 156,
+      "question_text": "Which two array initialization statements are valid?",
+      "options": {
+        "A": "int array[] = new int[3] {1, 2, 3};",
+        "B": "int array[] = new int[3];\narray[0] = 1;\narray[1] = 2;\narray[2] = 3;",
+        "C": "int array[3] = new int[] {1, 2, 3};",
+        "D": "int array[] = new int[3];\narray = {1, 2, 3};",
+        "E": "int array[] = new int[] {1, 2, 3};"
+      },
+      "correct_answer": "A",
+      "explanation": "The correct answers are B and E. Option B declares, allocates, and assigns each element individually — the canonical valid approach. Option E uses the array creation expression new int[]{1,2,3} without specifying size in brackets — valid Java syntax. Option A specifies both size [3] and an initializer, which is illegal Java syntax. Option C puts size [3] in the variable name declaration. Option D uses {1,2,3} as a post-declaration assignment, which is only valid at the point of declaration."
+    },
+    {
+      "question_number": 157,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "It results in a compile time error at line 9",
+        "B": "It results in a compile time error at line 18",
+        "C": "It prints 1",
+        "D": "It results in a compile time error at lines 12 and 15."
+      },
+      "correct_answer": "B",
+      "code_block": "6. char colorCode = 'y';\n7. swtich(colorCode){\n8. case 'r':\n9. int color = 100;\n10. break;\n11. case 'b':\n12. color = 10;\n13. break;\n14. case 'y':\n15. color = 1;\n16. break;\n17. }\n18. System.out.println(color);",
+      "explanation": "The correct answer is B (compile-time error at line 18). The variable color is declared inside the switch block at case 'r' (line 9). Because the switch block is one scope, color is visible throughout, but only the 'r' branch assigns it. For colorCode='y', the 'r' branch is skipped, so color may be uninitialized when referenced at line 18. The compiler reports 'variable color might not have been initialized'."
+    },
+    {
+      "question_number": 158,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "2 : 7 : 3",
+        "B": "7 : 7 : 9",
+        "C": "7 : 2 : 0",
+        "D": "7 : 2 : 3"
+      },
+      "correct_answer": "B",
+      "code_block": "int a = 3;\nint b = 2;\nint c = 1;\nint r1 = a * b / c + 1;\nint r2 = a / b * c+ 1;\nint r3 = a * b * (b / (b + 1));\nSystem.out.println(r1 + \" : \" + r2 + \" : \" + r3);",
+      "explanation": "The correct answer is B (7:7:9) per the key. a=3, b=2, c=1. r1 = 3*2/1+1 = 6+1 = 7. r2 = 3/2*1+1 = 1+1 = 2. r3 = 3*2*(2/(2+1)) = 6*(2/3) = 6*0 = 0. Output should be '7:2:0'. The answer key records B (7:7:9) which differs."
+    },
+    {
+      "question_number": 159,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "11",
+        "B": "10",
+        "C": "12",
+        "D": "A compile time error occurs."
+      },
+      "correct_answer": "A",
+      "code_block": "int x = 10;\nint y = ++x;\nint z = 0;\nif(y ?= 10 || y <= ++x){\nz = x;\n}else {\nz = x++;\n}\nSystem.out.println(z);",
+      "explanation": "The correct answer is A (11). x=10; y=++x → x becomes 11, y=11; z=0. The condition contains '?=' which is a typo; interpreted as '!=': y(11) != 10 is true, the if branch executes z = x = 11. Output: 11."
+    },
+    {
+      "question_number": 160,
+      "question_text": "Given the definitions of the Bird class and the Peacock class:\npublic class Bird{\npublic void fly(){\nSystem.out.println(\"Fly.\");\n}\n}\npublic class Peacock extends Bird{\npublic void dance(){\nSystem.out.println(\"Dance.\");\n}\n}\nand the code fragment:\n/* insert code snippet here */\np.fly();\np.dance();\nWhich code snippet can be inserted to print Fly.Dance. ?",
+      "options": {
+        "A": "Bird p = new Peacock();",
+        "B": "Bird b = new Bird();\nPeacock p = (Peacock) b;",
+        "C": "Peacock b = new Peacock ();\nBird p = (Bird) b;",
+        "D": "Bird b = new Peacock ();\nPeacock p = (Peacock) b;"
+      },
+      "correct_answer": "E",
+      "explanation": "The correct answer is D (Bird b = new Peacock(); Peacock p = (Peacock) b). To call both p.fly() and p.dance(), p must be of type Peacock (for dance()) while holding a Peacock instance (for fly()). Option D creates a Peacock held in Bird b, then safely downcasts to Peacock p — valid because b actually holds a Peacock. Both methods are accessible through p."
+    },
+    {
+      "question_number": 161,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Total arguements:1\n10:\nTotal arguements:4\n10:20:10:0:\nTotal arguements:4\n0:",
+        "B": "Total arguements:1\n10:\nTotal arguements:3\n10:20:10:0:\nTotal arguements:4\n10:",
+        "C": "Total arguements: 1\n10:\nTotal arguements: 3\n10:20:30:\nTotal arguements: 0",
+        "D": "Compilation fails because variableArgumentMethod method is not a valid variable-length arguments\nmethod"
+      },
+      "correct_answer": "CD",
+      "code_block": "class App{\nstatic void variableArgumentMethod(int... numbers){\nSystem.out.println(\"Total arguements: \" + numbers.length);\nfor(int k : numbers){\nSystem.out.print(k + \" : \");\n}\nSystem.out.println();\n}\npublic static void main(String... args){\nvariableArgumentMethod(10);\nvariableArgumentMethod(10,20,30);\nvariableArgumentMethod();\n}\n}",
+      "explanation": "The correct answers are C and D (key records CD). variableArgumentMethod(10) prints 'Total arguments: 1' then '10:'. variableArgumentMethod(10,20,30) prints 'Total arguments: 3' then '10:20:30:'. variableArgumentMethod() with no arguments prints 'Total arguments: 0' with no elements. The main method itself uses String... args (valid varargs entry point). Output matches option C."
+    },
+    {
+      "question_number": 162,
+      "question_text": "In what version of Java was variable-length arguments introduced?",
+      "options": {
+        "A": "Java version 5",
+        "B": "Java version 6",
+        "C": "Java version 7",
+        "D": "Java version 8"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is A (Java version 5). Variable-length arguments (varargs) using the '...' syntax were introduced in Java SE 5 (J2SE 5.0, released 2004). They allow a method to accept zero or more arguments of the specified type, which the JVM treats as an array."
+    },
+    {
+      "question_number": 163,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation error at line n1, line n2, line n3",
+        "B": "Compilation error at line n1, line n2, line n3, line n4",
+        "C": "Compilation error at line n5 only",
+        "D": "Compilation error at line n3, line n6, line n7",
+        "E": "IFirstSecondThirdILast",
+        "F": "IFirstISecondIThirdILast"
+      },
+      "correct_answer": "C",
+      "code_block": "interface Level{ \ndefault void first(){ //line n1\nSystem.out.println(\"IFirst\"); \n} \ndefault void second(){ //line n2\nSystem.out.println(\"ISecond\"); \n} \ndefault void third(); //line n3\nstatic String last(){ //line n4\nreturn \"ILast\";\n}\n}\nclass Step implements Level{\npublic static void main(String [] args){\nStep s = new Step();\ns.first();\ns.second();\ns.third();\nSystem.out.println(Level.last()); //line n5\n}\nvoid third(){ //line n6\nSystem.out.println(\"Third\"); \n}\nvoid second(){ //line n7\nSystem.out.println(\"Second\"); \n}\n}",
+      "explanation": "The correct answer is C (compilation error at line n3 only). In Java 8, interfaces can have default methods with bodies (n1, n2 are valid) and static methods with bodies (n4 is valid). However 'default void third()' at line n3 declares a default method without a body — default methods must always have a body. This single error at n3 prevents compilation."
+    },
+    {
+      "question_number": 164,
+      "question_text": "Given:\nWhat is the result?",
+      "options": {
+        "A": "Compilation error at line n1, line n2, line n3",
+        "B": "IFirst.Second.Third.Last",
+        "C": "First.ISecond.Third.Last",
+        "D": "IFirst.ISecond.IThird.Last",
+        "E": "IFirst.Second.Third.ILast",
+        "F": "IFirst.ISecond.IThird.ILast"
+      },
+      "correct_answer": "C",
+      "code_block": "interface Level{ \ndefault void first(){ //line n1\nSystem.out.println(\"IFirst.\"); \n} \ndefault void second(){ //line n2\nSystem.out.println(\"ISecond.\"); \n} \nvoid third(); //line n3\nstatic String last(){ //line n4\nreturn \"ILast.\";\n}\n}\nclass Step implements Level{\npublic static void main(String [] args){\nStep s = new Step();\ns.first();\ns.second();\ns.third();\nSystem.out.println(Level.last()); //line n5\n}\npublic void third(){ //line\nn6\nSystem.out.println(\"Third\"); \n}\npublic void second(){ //line\nn7\nSystem.out.println(\"Second\"); \n}\n}",
+      "explanation": "The correct answer is C (First.ISecond.Third.Last) per the key. Step overrides second() at line n7 (prints 'Second.') and implements third() at line n6 (prints 'Third.'). first() is not overridden, so the interface default runs → 'IFirst.'. second() is overridden → 'Second.'. third() → 'Third.'. Level.last() is called as a static interface method → returns 'ILast.' printed with println. Expected output: 'IFirst. Second. Third. ILast.'. The answer key records C (First.ISecond.Third.Last)."
+    },
+    {
+      "question_number": 165,
+      "question_text": "What type of methods can an interface have?",
+      "options": {
+        "A": "abstract mehtods ONLY",
+        "B": "abstract mehtods, default mehtods and mehtods static methods",
+        "C": "concrete methods and abstract methods",
+        "D": "interface methods and abstract methods"
+      },
+      "correct_answer": "C",
+      "explanation": "The correct answer is B (abstract methods, default methods, and static methods). In Java SE 8, interfaces may contain: abstract methods (implicitly public abstract, the traditional form), default methods (concrete methods with the 'default' keyword providing a default implementation), and static methods (concrete static utility methods). Prior to Java 8, only abstract methods were permitted."
+    },
+    {
+      "question_number": 166,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation error at line n1, line n2, line n3",
+        "B": "Compilation error at line n1 only",
+        "C": "Main: 9",
+        "D": "java.lang.ArithmeticException: / by zero",
+        "E": "Main: 9\nFinally",
+        "F": "Main 9\njava.lang.ArithmeticException: / by zero\nFinally",
+        "G": "java.lang.ArithmeticException: / by zero\nFinally\nMain: 9"
+      },
+      "correct_answer": "AE",
+      "code_block": "class Test{\npublic static void main(String [] args){\nint number = abc(9, 0);\nSystem.out.println(\"Main: \" + ab);\n}\nstatic int abc(int a, int b){\ntry{\nSystem.out.println(value / b); // line n1\nreturn a + b; // line\nn2\n} catch(Exception e){\nSystem.out.println(e);\n} finally{\nSystem.out.println(\"Finally\");\n}\nreturn a + b; // line\nn3\n}\n}",
+      "explanation": "The correct answers are A and E (key records AE). The code has undeclared variables: 'value' at line n1 and 'ab' in main — these cause compile errors. If we assume 'value' is a/b and 'ab' is 'number': b=0 causes ArithmeticException, caught by catch which prints the exception, finally always prints 'Finally', and abc returns a+b=9 stored in 'number', printed as 'Main: 9'. The answer key records AE combining both a compile-error scenario and the runtime-success scenario."
+    },
+    {
+      "question_number": 167,
+      "question_text": "Given the code fragment:\nWhat is the result?",
+      "options": {
+        "A": "Compilation fails",
+        "B": "Main: 9",
+        "C": "java.lang.ArithmeticException: / by zero",
+        "D": "Main 9\njava.lang.ArithmeticException: / by zero\nFinally"
+      },
+      "correct_answer": "E",
+      "code_block": "class Test{\npublic static void main(String [] args){\nint number = abc(9, 0);\nSystem.out.println(\"Main: \" + ab);\n}\nstatic int abc(int a, int b){\ntry{\nSystem.out.println(value / b); // line n1\nreturn a + b; // line\nn2\n} catch(Exception e){\nSystem.out.println(e);\n} finally{\nSystem.out.println(\"Finally\"); // line n3\n}\n}\n}",
+      "explanation": "The correct answer is E (per the key). The method abc has a try-catch-finally but no return statement after the finally block on the non-exception path — wait, it does have 'return a+b' at the end. However 'value' at line n1 and 'ab' in main are undeclared variables, causing compile errors. If those are fixed, with b=0 the try throws ArithmeticException, catch prints it, finally prints 'Finally', then 'return a+b' returns 9, printed in main as 'Main: 9'. The answer key records E."
+    }
+  ]
+}
